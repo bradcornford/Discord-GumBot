@@ -1,0 +1,24 @@
+{
+  "name": "discord-spybot",
+  "version": "1.0.0",
+  "description": "A Discord spy bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bradley Cornford",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "dateformat": "^3.0.3",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "log-timestamp": "^0.3.0",
+    "moment": "^2.29.0",
+    "moment-timezone": "^0.5.31",
+    "ms": "^2.1.2",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "set-interval-async": "^1.0.33"
+  }
+}

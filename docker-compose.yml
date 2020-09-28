@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  spybot:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: bradcornford/discord-spybot:latest
+    container_name: spybot
+    working_dir: /usr/src/app
+    environment:
+      TZ: "Europe/London"
+    env_file:
+      - .env
