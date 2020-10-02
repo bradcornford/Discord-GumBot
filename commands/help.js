@@ -7,6 +7,7 @@ const config = require('../includes/config');
 module.exports = {
     name: 'help',
     description: 'Show help for the bot',
+    parameters: [],
     hidden: true,
     run: async (client, message, args) => {
         const embed = new MessageEmbed()
@@ -18,7 +19,7 @@ module.exports = {
             let command = require(`../commands/${cmd}`);
 
             if (!command.hidden) {
-                embed.addField(`**${config.prefix}${command.name}**`, command.description);
+                embed.addField(`**${config.prefix}${command.name} ${command.parameters.join(' ')}**`, command.description);
             }
         });
 

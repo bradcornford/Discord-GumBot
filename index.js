@@ -20,5 +20,9 @@ client.on('message', async (message) => {
     await require('./events/message')(client, message);
 });
 
+client.on('messageReactionAdd', async (reaction, user) => {
+    await require('./events/messageReactionAdd')(reaction, user);
+});
+
 client.login(config.discordToken)
     .catch(console.error);

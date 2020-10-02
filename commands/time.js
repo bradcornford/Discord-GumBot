@@ -3,6 +3,7 @@ const moment = require('moment-timezone');
 module.exports = {
     name: 'time',
     description: 'Display a list of current times',
+    parameters: [],
     hidden: false,
     run: async (client, message, args) => {
         let now = moment();

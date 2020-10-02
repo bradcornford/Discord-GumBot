@@ -1,6 +1,7 @@
 module.exports = {
     name: 'dice',
     description: 'Roll a dice',
+    parameters: [],
     hidden: false,
     run: async (client, message, args) => {
         let die = ['1', '2', '3', '4', '5', '6'];

@@ -3,6 +3,7 @@ const config = require('../includes/config');
 module.exports = {
     name: 'list',
     description: 'Display a list of all codes',
+    parameters: [],
     hidden: false,
     run: async (client, message, args) => {
         if (config.codes === undefined || config.codes.length === 0) {
