@@ -2,7 +2,7 @@ const moment = require('moment-timezone');
 
 module.exports = {
     name: 'reset',
-    description: 'Display a list of current times',
+    description: 'Display when the game server resets',
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {

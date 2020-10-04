@@ -1,6 +1,15 @@
-# Discord SpyBot
+# Discord GumBot
 
-Scrapes the Gumballs and Dungeons Facebook page for Spy codes and sends new codes to a Discord channel.
+Provides useful commands for Gumballs and Dungeons such as:
+- Current time
+- Reset time
+- Links to Wiki 
+- Links to Forum
+- Flip a coin
+- Roll a dice
+- Create a simple yes/no poll
+
+Finally, it also scrapes the Gumballs and Dungeons Facebook page for Spy codes and sends new codes to a specified Discord channel.
 
 ## Installation
 
@@ -16,8 +25,8 @@ The application can be run locally with the following:
 The application can be run in a docker container with the following:
 
     cp .env{.example,}
-    docker build -t bradcornford/discord-spybot .
-    docker run -d bradcornford/discord-spybot
+    docker build -t bradcornford/discord-gumbot .
+    docker run -d bradcornford/discord-gumbot
 
 ### Docker-Compose
 

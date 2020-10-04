@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-  spybot:
+  gumbot:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: bradcornford/discord-spybot:latest
-    container_name: spybot
+    image: bradcornford/discord-gumbot:latest
+    container_name: gumbot
     working_dir: /usr/src/app
     environment:
       TZ: "Europe/London"
