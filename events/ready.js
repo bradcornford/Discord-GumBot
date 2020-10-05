@@ -10,6 +10,12 @@ const config = require('../includes/config');
 module.exports = (client) => {
     console.log(`${client.user.username} is now online!`);
 
+    let packageJson = require('../package.json');
+
+    client.user.setActivity(`version ${packageJson.version}`, { type: 'PLAYING' })
+        .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+        .catch(console.error);
+
     let channel = client.channels.cache.find(channel => channel.name === config.discordCodesChannel)
 
     getFacebookPosts()
