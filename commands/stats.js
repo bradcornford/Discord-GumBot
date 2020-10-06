@@ -2,7 +2,7 @@ const { MessageEmbed, version: discordVersion } = require('discord.js');
 
 const moment = require('moment-timezone');
 
-const packageJson = require('../package.json');
+const config = require('../includes/config');
 
 const { loadavg, cpus } = require('os');
 const { version: nodeVersion } = require('process');
@@ -25,7 +25,7 @@ module.exports = {
         const upTime = now.subtract(client.uptime).fromNow(true);
 
         const embed = new MessageEmbed()
-            .setColor(0x17A2B8)
+            .setColor(config.colors.primary)
             .setTitle('Statistics')
             .setDescription('System statistics')
             .addFields(
@@ -55,12 +55,12 @@ module.exports = {
                     inline: true,
                 },
                 {
-                    name: '✅ Node.js',
+                    name: 'ℹ️ Node.js',
                     value: `**${nodeVersion}**`,
                     inline: true,
                 }
             )
-            .setFooter(`Gum Bot ${packageJson.version}`)
+            .setFooter(`Gum Bot ${config.version}`)
             .setTimestamp();
 
         return message.channel.send(embed);

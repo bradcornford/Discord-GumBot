@@ -4,8 +4,6 @@ const { readdirSync } = require('fs');
 
 const config = require('../includes/config');
 
-const packageJson = require('../package.json');
-
 module.exports = {
     name: 'help',
     description: 'Show help for the bot',
@@ -13,10 +11,10 @@ module.exports = {
     hidden: true,
     run: async (client, message, args) => {
         const embed = new MessageEmbed()
-            .setColor(0x17A2B8)
+            .setColor(config.colors.info)
             .setTitle('Help')
             .setDescription('Available commands')
-            .setFooter(`Gum Bot ${packageJson.version}`)
+            .setFooter(`Gum Bot ${config.version}`)
             .setTimestamp();
 
         readdirSync(`./commands/`).map((cmd) => {

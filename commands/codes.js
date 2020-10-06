@@ -1,7 +1,7 @@
 const config = require('../includes/config');
 
 module.exports = {
-    name: 'list',
+    name: 'codes',
     description: 'Display a list of all codes',
     parameters: [],
     hidden: true,
@@ -9,10 +9,10 @@ module.exports = {
         if (config.codes === undefined || config.codes.length === 0) {
             console.log('No codes available to send');
 
-            return message.channel.send('💬 **Codes: - **');
+            return message.channel.send('📒 **Codes: - **');
         }
 
-        let output = '💬 **Codes:**';
+        let output = '📒 **Codes:**';
 
         for (let i = 0; i < config.codes.length; i++) {
             output = output.concat('\n       ', config.codes[i].code);

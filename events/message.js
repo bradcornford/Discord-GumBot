@@ -26,7 +26,7 @@ module.exports = async (client, message) => {
         command.run(client, message, args)
             .then(() => {
                 message.delete({ timeout: 1000 })
-                    .then(msg => console.log(`Deleted '${command.name}' message from ${msg.author.username} after 1 seconds`))
+                    .then(message => console.log(`Deleted '${command.name}' message from ${message.author.username} after 1 seconds`))
                     .catch(console.error);
             })
             .catch(console.error)
