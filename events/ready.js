@@ -4,13 +4,13 @@ const { getFacebookPosts, extractCodesFromFacebookPosts, extractUpdatesFromFaceb
 
 const config = require('../includes/config');
 
+const packageJson = require('../package.json');
+
 /**
  * @param {Client} client
  */
 module.exports = (client) => {
     console.log(`${client.user.username} is now online!`);
-
-    let packageJson = require('../package.json');
 
     client.user.setActivity(`version ${packageJson.version}`, { type: 'PLAYING' })
         .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
