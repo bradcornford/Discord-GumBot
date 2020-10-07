@@ -16,13 +16,20 @@ const getFacebookPosts = async () => {
     })
         .then( postsHtml => {
             const $ = cheerio.load(postsHtml);
+
+            console.log('Completed Facebook request');
+
             const timeLinePostElements = $('.userContent').map((i,el) => $(el)).get();
-            return timeLinePostElements.map(post => {
+            const result = timeLinePostElements.map(post => {
                 return {
                     message: post.html(),
                     created_at: post.parents('.userContentWrapper').find('.timestampContent').html()
-                }
+                };
             });
+
+            console.log('Completed parsing Facebook request to posts');
+
+            return result;
         })
 };
 
@@ -60,6 +67,8 @@ const extractCodesFromFacebookPosts = async (posts, type, channel) => {
             }
         }
     }
+
+    console.log('Completed extracting codes from Facebook posts');
 
     return posts;
 };
@@ -106,6 +115,8 @@ const extractUpdatesFromFacebookPosts = async (posts, type, channel) => {
             }
         }
     }
+
+    console.log('Completed extracting updates from Facebook posts');
 
     return posts;
 };

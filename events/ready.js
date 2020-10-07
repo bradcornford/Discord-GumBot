@@ -18,44 +18,16 @@ module.exports = (client) => {
     let updatesChannel = client.channels.cache.find(channel => channel.name === config.discordUpdatesChannel)
 
     getFacebookPosts()
-        .then((posts) => {
-            console.log('Completed initial Facebook request');
-
-            return posts;
-        })
         .then((posts) => extractCodesFromFacebookPosts(posts, 'initial', codesChannel))
-        .then((posts) => {
-            console.log('Completed extracting codes from Facebook posts');
-
-            return posts;
-        })
         .then((posts) => extractUpdatesFromFacebookPosts(posts, 'initial', updatesChannel))
-        .then(() => {
-            console.log('Completed extracting updates from Facebook posts');
-        })
-        .then(() => {
-            setIntervalAsync(
+        .then(() => setIntervalAsync(
                 async () => {
                     await getFacebookPosts()
-                        .then((posts) => {
-                            console.log('Completed Facebook poll request');
-
-                            return posts;
-                        })
                         .then((posts) => extractCodesFromFacebookPosts(posts, 'poll', codesChannel))
-                        .then((posts) => {
-                            console.log('Completed extracting codes from Facebook posts');
-
-                            return posts;
-                        })
                         .then((posts) => extractUpdatesFromFacebookPosts(posts, 'poll', updatesChannel))
-                        .then(() => {
-                            console.log('Completed extracting updates from Facebook posts');
-                        })
                         .catch(console.error);
                 },
                 config.pollInterval
-            )
-        })
+            ))
         .catch(console.error);
 };

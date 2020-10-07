@@ -29,6 +29,6 @@ module.exports = async (client, message) => {
                     .then(message => console.log(`Deleted '${command.name}' message from ${message.author.username} after 1 seconds`))
                     .catch(console.error);
             })
-            .catch(console.error)
+            .catch(console.error);
     }
 };
