@@ -24,7 +24,6 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     await require('./events/messageUpdate')(oldMessage, newMessage);
 });
 
-
 client.on('messageDelete', async (message) => {
     await require('./events/messageDelete')(message);
 });

@@ -8,6 +8,8 @@ module.exports = {
             return message.channel.send(`You didn\'t specify the question for the poll!`);
         }
 
+        const userMessage = message;
+
         const filter = (reaction, user) => {
             if (!['👍', '👎'].includes(reaction.emoji.name)) {
                 reaction.users.reaction.users.remove(user.id)
@@ -32,9 +34,9 @@ module.exports = {
                                 let yes = (typeof collected.get('👍') === 'undefined' ? 0 : (collected.get('👍').count - 1));
                                 let no = (typeof collected.get('👎') === 'undefined' ? 0 : (collected.get('👎').count - 1));
 
-                                message.reply(`**Results are in:** ${yes} Yes / ${no} No`);
+                                userMessage.reply(`**Results are in:** ${yes} Yes / ${no} No`);
 
-                                console.log(`Results for 'poll' ${yes} Yes / ${no} No`);
+                                console.log(`Results for 'poll': ${yes} Yes / ${no} No`);
                             });
                     })
                     .catch(console.error);
