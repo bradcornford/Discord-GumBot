@@ -31,6 +31,6 @@ module.exports = {
             'Very doubtful.',
         ];
 
-        return message.channel.send(`🎱 **Magic 8-ball: ${answers[Math.floor(Math.random() * answers.length)]}**`);
+        return message.channel.send(`🎱 **Magic 8-ball:** ${answers[Math.floor(Math.random() * answers.length)]}`);
     },
 };

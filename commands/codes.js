@@ -9,7 +9,7 @@ module.exports = {
         if (config.codes === undefined || config.codes.length === 0) {
             console.log('No codes available to send');
 
-            return message.channel.send('📒 **Codes: - **');
+            return message.channel.send('📒 **Codes:** -');
         }
 
         let output = '📒 **Codes:**';

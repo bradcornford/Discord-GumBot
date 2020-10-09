@@ -9,9 +9,9 @@ module.exports = {
         if (config.codes === undefined || config.codes.length === 0) {
             console.log('No codes available to send');
 
-            return message.channel.send('💬 **Current Code: - **');
+            return message.channel.send('💬 **Current Code:** -');
         }
 
-        return message.channel.send(`💬 **Current Code: ${config.codes[0].code}**`);
+        return message.channel.send(`💬 **Current Code:** ${config.codes[0].code}`);
     },
 };

@@ -10,6 +10,6 @@ module.exports = {
         let gameTime = now.clone().tz('Asia/Shanghai');
         let gameResetTime = gameTime.clone().endOf('day');
 
-        return message.channel.send(`🔁 **Game resets: ${gameResetTime.diff(gameTime, 'hours')}h ${(gameResetTime.diff(gameTime, 'minutes') % 60)}m**`);
+        return message.channel.send(`🔁 **Game resets:** ${gameResetTime.diff(gameTime, 'hours')}h ${(gameResetTime.diff(gameTime, 'minutes') % 60)}m`);
     },
 };

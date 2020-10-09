@@ -9,7 +9,7 @@ module.exports = {
         if (config.updates === undefined || config.updates.length === 0) {
             console.log('No updates available to send');
 
-            return message.channel.send('📒 **Updates: - **');
+            return message.channel.send('📒 **Updates:** -');
         }
 
         let output = '📒 **Updates:**';

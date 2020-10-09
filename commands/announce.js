@@ -4,6 +4,6 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
-        return message.channel.send(`📢 **Announcement: @everyone ${args.join(' ')}**`);
+        return message.channel.send(`📢 **Announcement:** @everyone ${args.join(' ')}`);
     },
 };

@@ -6,6 +6,6 @@ module.exports = {
     run: async (client, message, args) => {
         let coin = ['Heads', 'Tails'];
 
-        return message.channel.send(`🪙 **Flipped a coin: ${coin[Math.floor(Math.random() * coin.length)]}**`);
+        return message.channel.send(`🪙 **Flipped a coin:** ${coin[Math.floor(Math.random() * coin.length)]}`);
     },
 };

@@ -4,6 +4,6 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
-        return message.channel.send('📚 **Here\'s a link: https://gdmaze.fandom.com/wiki/Gumballs_%26_Dungeons_Wikia**');
+        return message.channel.send('📚 **Here\'s a link:** \nhttps://gdmaze.fandom.com/wiki/Gumballs_%26_Dungeons_Wikia**');
     },
 };
