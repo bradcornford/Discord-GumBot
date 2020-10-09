@@ -42,18 +42,21 @@ module.exports = {
                 countdownMessage = message;
                 console.log(`User ${initialMessage.author.username} created 'countdown'`);
 
-                const timer = setIntervalAsync(() => {
-                    countdownMessage.edit(countdown())
-                        .then(message => countdownMessage = message)
-                        .catch(console.error);
+                const timer = setIntervalAsync(
+                    () => {
+                        countdownMessage.edit(countdown())
+                            .then(message => countdownMessage = message)
+                            .catch(console.error);
 
-                    if (eventTime.diff(moment()) <= 0) {
-                        initialMessage.reply(`**Countdown has expired**`);
-                        console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);
+                        if (eventTime.diff(moment()) <= 0) {
+                            initialMessage.reply(`**Countdown has completed**`);
+                            console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);
 
-                        clearIntervalAsync(timer);
-                    }
-                }, ms('1m'));
+                            clearIntervalAsync(timer);
+                        }
+                    },
+                    ms('1m')
+                );
             });
     },
 };

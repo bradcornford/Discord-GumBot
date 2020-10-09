@@ -147,15 +147,18 @@ module.exports = {
                             console.log(`Finished 'invite' for user ${initialMessage.author.username}`);
                         });
 
-                        const timer = setIntervalAsync(() => {
-                            eventMessage.edit('', {embed: embed()})
-                                .then(message => eventMessage = message)
-                                .catch(console.error);
+                        const timer = setIntervalAsync(
+                            () => {
+                                eventMessage.edit('', {embed: embed()})
+                                    .then(message => eventMessage = message)
+                                    .catch(console.error);
 
-                            if (eventTime.diff(moment()) <= 0) {
-                                clearIntervalAsync(timer);
-                            }
-                        }, ms('1m'));
+                                if (eventTime.diff(moment()) <= 0) {
+                                    clearIntervalAsync(timer);
+                                }
+                            },
+                            ms('1m')
+                        );
                     });
             });
     },
