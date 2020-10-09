@@ -6,7 +6,7 @@ module.exports = {
     parameters: [],
     hidden: true,
     run: async (client, message, args) => {
-        let userMessage = message;
+        let initialMessage = message;
 
         return message.channel.send('🤖️ **Should I shutdown?**')
             .then(message => {
@@ -16,7 +16,7 @@ module.exports = {
                     .then(() => message.react('👎'))
                     .then(() => {
                         const filter = (reaction, user) => {
-                            return ['👍', '👎'].includes(reaction.emoji.name);
+                            return ['👍', '👎'].includes(reaction.emoji.name) && initialMessage.author.id === user.id;
                         };
 
                         message.awaitReactions(filter, { max: 1, time: 10000, errors: ['time'] })
@@ -25,7 +25,7 @@ module.exports = {
 
                                 if (reaction.emoji.name === '👍') {
                                     console.log(`Result for 'shutdown': confirmed`);
-                                    userMessage.reply('Shutting down!');
+                                    initialMessage.reply('Shutting down!');
 
                                     setIntervalAsync(
                                         () => {
@@ -36,12 +36,12 @@ module.exports = {
                                     );
                                 } else {
                                     console.log(`Result for 'shutdown': rejected`);
-                                    userMessage.reply('Shutdown aborted');
+                                    initialMessage.reply('Shutdown aborted');
                                 }
                             })
                             .catch(collected => {
                                 console.log(`Result for 'shutdown': ignored`);
-                                userMessage.reply('You didn\'t react in time');
+                                initialMessage.reply('You didn\'t react in time');
                             });
                     });
             });
