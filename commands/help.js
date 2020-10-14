@@ -21,7 +21,7 @@ module.exports = {
             let command = require(`../commands/${cmd}`);
 
             if (!command.hidden) {
-                embed.addField(`**${config.prefix}${command.name} ${command.parameters.join(' ')}**`, command.description);
+                embed.addField(`**\`${config.prefix}${command.name} ${command.parameters.join(' ')}\`**`, command.description);
             }
         });
 

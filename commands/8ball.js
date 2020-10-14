@@ -1,11 +1,13 @@
+const { validateMessageFromInput } = require("../includes/input");
+
 module.exports = {
     name: '8ball',
     description: 'Ask magic 8-ball a question',
     parameters: ['Question?'],
     hidden: false,
     run: async (client, message, args) => {
-        if (args.length === 0 || typeof args[0] !== 'string') {
-            return message.reply(`You didn\'t specify the question for the magic 8-ball!`);
+        if (!validateMessageFromInput(args, message)) {
+            return message;
         }
 
         let answers = [

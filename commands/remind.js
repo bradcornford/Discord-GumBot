@@ -1,40 +1,44 @@
 const moment = require('moment-timezone');
 
+const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require("../includes/input");
+
 module.exports = {
     name: 'remind',
     description: 'Create a reminder',
-    parameters: ['Message', '@', 'dd-mm-yyyy hh:mm'],
+    parameters: [
+        'Message',
+        '~',
+        '[' , 'me', '|', 'everyone', '|', 'here', '|', 'group', ']',
+        '@',
+        '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m 1s', ']'
+    ],
     hidden: false,
     run: async (client, message, args) => {
-        if (args.length === 0 || typeof args[0] !== 'string') {
-            return message.reply(`You didn\'t specify the reminder or date and time for the invite!`);
-        }
-
-        if (args.indexOf('@') === -1) {
-            return message.reply(`You didn\'t specify the reminder date and time for the invite!`);
-        }
-
-        if (!/[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}$/.test(args.join(' '))) {
-            return message.reply(`You didn\'t specify the reminder date and time in a valid format!`);
+        if (
+            !validateMessageFromInput(args, message) ||
+            !validateUserFromInput(args, message) ||
+            !validateTimeFromInput(args, message)
+        ) {
+            return message;
         }
 
         let now = moment();
-        const reminderTime = moment(args.slice((args.indexOf('@') + 1), args.length).join(' ').concat(':00'), 'DD-MM-YYYY hh:mm:ss');
-
-        if (reminderTime.diff(now) <= 0) {
-            return message.reply(`Reminder occurs in the past!`);
-        }
-
         const initialMessage = message;
-        let reminderMessage = args.slice(0, args.indexOf('@')).join(' ');
+        let reminderTime = extractTimeFromInput(args);
+        let reminderMessage = extractMessageFromInput(args);
+        let reminderUser = extractUserFromInput(args);
 
-        return message.channel.send(`📝 **Created reminder:** ${initialMessage.author.username} - ${reminderTime}`)
+        return message.channel.send(`📝 **Created reminder:**`)
             .then(() => {
                 console.log(`User ${initialMessage.author.username} created 'reminder'`);
 
                 client.setTimeout(
                     () => {
-                        initialMessage.reply(`**Reminder:** ${reminderMessage}`);
+                        if (reminderUser === 'me') {
+                            initialMessage.reply(`**Reminder:** ${reminderMessage}`);
+                        } else {
+                            message.channel.send(`**Reminder:** ${reminderUser}, ${reminderMessage}`);
+                        }
                         console.log(`Finished 'reminder' for user ${initialMessage.author.username}`);
                     },
                     reminderTime.diff(now)

@@ -1,19 +1,30 @@
 const { Collection } = require('discord.js');
 
+const moment = require('moment-timezone');
+
+const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require('../includes/input');
+
 module.exports = {
     name: 'poll',
-    description: 'Initiate a 5 minute yes/no poll',
-    parameters: ['Question?'],
+    description: 'Initiate a timed yes/no poll',
+    parameters: [ 'Question?', '@', '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m', ']' ],
     hidden: false,
     run: async (client, message, args) => {
-        if (args.length === 0 || typeof args[0] !== 'string') {
-            return message.reply(`You didn\'t specify the question for the poll!`);
+        if (
+            !validateMessageFromInput(args, message) ||
+            !validateMessageFromInput(args, message)||
+            !validateTimeFromInput(args, message)
+        ) {
+            return message;
         }
 
+        let now = moment();
         const initialMessage = message;
+        let pollTime = extractTimeFromInput(args);
+        let pollMessage = extractMessageFromInput(args);
         const reactedUsers = new Collection();
 
-        return message.channel.send(`📋 **${args.join(' ')}**`)
+        return message.channel.send(`📋 **${pollMessage}**`)
             .then(message => {
                 console.log(`User ${initialMessage.author.username} created 'poll'`);
 
@@ -42,7 +53,7 @@ module.exports = {
                             return true;
                         };
 
-                        const collector = message.createReactionCollector(filter, { time: 300000, dispose: true });
+                        const collector = message.createReactionCollector(filter, { time: pollTime.diff(now), dispose: true });
 
                         collector.on('collect', (reaction, user) => {
                             reactedUsers.set(user.id, user.username);

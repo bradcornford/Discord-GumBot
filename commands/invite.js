@@ -2,40 +2,33 @@ const { MessageEmbed, Collection } = require('discord.js');
 
 const moment = require('moment-timezone');
 
+const ms = require('string-to-ms');
+
 const { setIntervalAsync, clearIntervalAsync } = require('set-interval-async/dynamic');
 
-const ms = require('ms');
-
 const config = require('../includes/config');
+
+const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require("../includes/input");
 
 module.exports = {
     name: 'invite',
     description: 'Create an invite to an event',
-    parameters: ['Event Name', '@', 'dd-mm-yyyy hh:mm'],
+    parameters: [
+        'Event Name',
+        '@',
+        '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m', ']'
+    ],
     hidden: false,
     run: async (client, message, args) => {
-        if (args.length === 0 || typeof args[0] !== 'string') {
-            return message.reply(`You didn\'t specify the event name or date and time for the invite!`);
-        }
-
-        if (args.indexOf('@') === -1) {
-            return message.reply(`You didn\'t specify the event date and time for the invite!`);
-        }
-
-        if (!/[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}$/.test(args.join(' '))) {
-            return message.reply(`You didn\'t specify the event date and time in a valid format!`);
+        if (!validateMessageFromInput(args, message) || !validateTimeFromInput(args, message)) {
+            return message;
         }
 
         let now = moment();
-        const eventTime = moment(args.slice((args.indexOf('@') + 1), args.length).join(' ').concat(':00'), 'DD-MM-YYYY hh:mm:ss');
-
-        if (eventTime.diff(now) <= 0) {
-            return message.reply(`Invite occurs in the past!`);
-        }
-
         const initialMessage = message;
-        let eventMessage;
-        let eventName = args.slice(0, args.indexOf('@')).join(' ');
+        let inviteTime = extractTimeFromInput(args);
+        let inviteMessage;
+        let inviteName = extractMessageFromInput(args);
 
         const reactedUsers = new Collection();
         const accepted = new Collection();
@@ -45,8 +38,8 @@ module.exports = {
         let embed = () => {
             return new MessageEmbed()
                 .setColor(config.colors.primary)
-                .setTitle(eventName)
-                .setDescription(eventTime)
+                .setTitle(inviteName)
+                .setDescription(inviteTime)
                 .addFields(
                     {
                         name: 'Accepted',
@@ -65,13 +58,13 @@ module.exports = {
                     },
                 )
                 .setAuthor(`Created by ${message.author.username}`)
-                .setFooter(`Occurs ${eventTime.fromNow()}`)
+                .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs ${inviteTime.fromNow()}`)
                 .setTimestamp();
         };
 
         return message.channel.send(embed())
             .then(message => {
-                eventMessage = message;
+                inviteMessage = message;
                 console.log(`User ${initialMessage.author.username} created 'invite'`);
 
                 message.react('✅')
@@ -100,7 +93,7 @@ module.exports = {
                             return true;
                         };
 
-                        const collector = message.createReactionCollector(filter, { time: eventTime.diff(now), dispose: true });
+                        const collector = message.createReactionCollector(filter, { time: inviteTime.diff(now), dispose: true });
 
                         collector.on('collect', (reaction, user) => {
                             reactedUsers.set(user.id, user.username);
@@ -117,8 +110,8 @@ module.exports = {
                                     break;
                             }
 
-                            eventMessage.edit('', {embed: embed()})
-                                .then(message => eventMessage = message)
+                            inviteMessage.edit('', {embed: embed()})
+                                .then(message => inviteMessage = message)
                                 .catch(console.error);
                         });
 
@@ -137,8 +130,8 @@ module.exports = {
                                     break;
                             }
 
-                            eventMessage.edit('', {embed: embed()})
-                                .then(message => eventMessage = message)
+                            inviteMessage.edit('', {embed: embed()})
+                                .then(message => inviteMessage = message)
                                 .catch(console.error);
                         });
 
@@ -149,11 +142,11 @@ module.exports = {
 
                         const timer = setIntervalAsync(
                             () => {
-                                eventMessage.edit('', {embed: embed()})
-                                    .then(message => eventMessage = message)
+                                inviteMessage.edit('', {embed: embed()})
+                                    .then(message => inviteMessage = message)
                                     .catch(console.error);
 
-                                if (eventTime.diff(moment()) <= 0) {
+                                if (inviteTime.diff(moment()) <= 0) {
                                     clearIntervalAsync(timer);
                                 }
                             },
