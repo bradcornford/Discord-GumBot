@@ -8,7 +8,7 @@ module.exports = {
     parameters: [
         'Message',
         '~',
-        '[' , 'me', '|', 'everyone', '|', 'here', '|', 'group', ']',
+        '[' , 'me', '|', 'everyone', '|', 'here', '|', 'username', ']',
         '@',
         '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m 1s', ']'
     ],
@@ -26,7 +26,7 @@ module.exports = {
         const initialMessage = message;
         let reminderTime = extractTimeFromInput(args);
         let reminderMessage = extractMessageFromInput(args);
-        let reminderUser = extractUserFromInput(args);
+        let reminderUser = extractUserFromInput(args, client);
 
         return message.channel.send(`📝 **Created reminder:**`)
             .then(() => {
@@ -39,6 +39,7 @@ module.exports = {
                         } else {
                             message.channel.send(`**Reminder:** ${reminderUser}, ${reminderMessage}`);
                         }
+
                         console.log(`Finished 'reminder' for user ${initialMessage.author.username}`);
                     },
                     reminderTime.diff(now)

@@ -39,13 +39,13 @@ module.exports = {
             (botChoice === 1 && userChoice === 0) ||
             (botChoice === 2 && userChoice === 1)
         ) {
-            winner = 'Winner @gumbot!';
+            winner = `Winner ${client.user.toString()}!`;
         } else if (
             (userChoice === 0 && botChoice === 2) ||
             (userChoice === 1 && botChoice === 0) ||
             (userChoice === 2 && botChoice === 1)
         ) {
-            winner = `Winner @${message.author.username}!`;
+            winner = `Winner ${message.author.toString()}!`;
         } else if (botChoice === userChoice) {
             winner = 'It\'s a draw!';
         }

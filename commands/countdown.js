@@ -11,7 +11,7 @@ module.exports = {
     description: 'Create a countdown',
     parameters: [
         '~',
-        '[' , 'me', '|', 'everyone', '|', 'here', '|', 'group', ']',
+        '[' , 'me', '|', 'everyone', '|', 'here', '|', 'username', ']',
         '@',
         '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m', ']'
     ],
@@ -28,7 +28,7 @@ module.exports = {
         const initialMessage = message;
         let countdownTime = extractTimeFromInput(args);
         let countdownMessage;
-        let countdownUser = extractUserFromInput(args);
+        let countdownUser = extractUserFromInput(args, client);
 
         let countdown = () => {
             if (countdownTime.diff(moment()) <= 0) {
@@ -53,8 +53,9 @@ module.exports = {
                             if (countdownUser === 'me') {
                                 initialMessage.reply(`**Countdown has completed**`);
                             } else {
-                                message.channel.send(`**@${countdownUser}, Countdown has completed**`);
+                                message.channel.send(`**${countdownUser}, Countdown has completed**`);
                             }
+
                             console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);
 
                             clearIntervalAsync(timer);

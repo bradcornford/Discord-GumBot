@@ -85,7 +85,7 @@ const extractMessageFromInput = (args) => {
     return args.slice(0, end).join(' ');
 }
 
-const extractUserFromInput = (args) => {
+const extractUserFromInput = (args, client) => {
     let end;
 
     if (args.indexOf('@') !== -1) {
@@ -94,7 +94,19 @@ const extractUserFromInput = (args) => {
         end = args.length;
     }
 
-    return args.slice((args.indexOf('~') + 1), end).join(' ');
+    let input = args.slice((args.indexOf('~') + 1), end).join(' ');
+
+    if (input === 'me') {
+        return input;
+    }
+
+    let user = client.users.cache.find(user => user.username === input);
+
+    if (user) {
+        return user.toString();
+    }
+
+    return `@${input}`;
 }
 
 const extractTimeFromInput = (args) => {

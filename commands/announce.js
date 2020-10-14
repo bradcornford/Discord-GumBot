@@ -3,16 +3,16 @@ const { validateMessageFromInput, validateUserFromInput, extractMessageFromInput
 module.exports = {
     name: 'announce',
     description: 'Send a channel announcement',
-    parameters: ['Announcement', '~', '[' , 'everyone', '|', 'here', '|', 'group', ']' ],
+    parameters: ['Announcement', '~', '[' , 'everyone', '|', 'here', ']' ],
     hidden: false,
     run: async (client, message, args) => {
         if (!validateMessageFromInput(args, message) || !validateUserFromInput(args, message)) {
             return message;
         }
 
-        let announcement = extractMessageFromInput(args);
-        let user = extractUserFromInput(args);
+        let announcementMessage = extractMessageFromInput(args);
+        let announcementUser = extractUserFromInput(args, client);
 
-        return message.channel.send(`📢 **Announcement:** @${user}, ${announcement}`);
+        return message.channel.send(`📢 **Announcement:** ${announcementUser}, ${announcementMessage}`);
     },
 };
