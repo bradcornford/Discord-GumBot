@@ -1,4 +1,4 @@
-const ms = require('ms');
+const ms = require('string-to-ms');
 const packageJson = require('../package.json');
 
 const PREFIX = process.env.BOT_PREFIX || '!';
