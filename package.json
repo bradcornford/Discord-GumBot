@@ -1,6 +1,6 @@
 {
   "name": "discord-gumbot",
-  "version": "1.22.0",
+  "version": "1.23.0",
   "description": "A Discord gumballs and dungeons bot",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "moment": "^2.29.0",
     "moment-timezone": "^0.5.31",
     "process": "^0.11.10",
+    "random-animals-apis": "^1.1.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
     "set-interval-async": "^1.0.33",
