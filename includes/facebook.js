@@ -103,11 +103,13 @@ const extractUpdatesFromFacebookPosts = async (posts, type, channel) => {
                 config.updates.unshift({ 'version': update, 'date': post.created_at });
                 console.log(`Current update: ${update}`);
 
+                let message = htmlToText.fromString(post.message).substring(1, 1024).split('See more')[0];
+
                 const embed = new MessageEmbed()
                     .setColor(0x17A2B8)
                     .setTitle('Update Announcement')
                     .setDescription(`Version ${update}`)
-                    .addField('Description', htmlToText.fromString(post.message).substring(1, 1024))
+                    .addField('Description', message)
                     .setURL(`https://www.facebook.com${post.message.match(/href="(.+)" /)[1]}`);
 
                 channel.send(embed)
