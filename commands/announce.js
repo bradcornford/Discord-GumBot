@@ -13,6 +13,11 @@ module.exports = {
         let announcementMessage = extractMessageFromInput(args);
         let announcementUser = extractUserFromInput(args, client);
 
+        message.author.send(`📢 **Created Announcement:** ${announcementMessage} ~ ${announcementUser}`)
+            .catch(console.error);
+
+        console.log(`User ${message.author.username} created 'announcement': ${announcementMessage} ~ ${announcementUser}`);
+
         return message.channel.send(`📢 **Announcement:** ${announcementUser}, ${announcementMessage}`);
     },
 };

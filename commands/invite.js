@@ -4,8 +4,6 @@ const moment = require('moment-timezone');
 
 const ms = require('string-to-ms');
 
-const { setIntervalAsync, clearIntervalAsync } = require('set-interval-async/dynamic');
-
 const config = require('../includes/config');
 
 const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require("../includes/input");
@@ -62,10 +60,13 @@ module.exports = {
                 .setTimestamp();
         };
 
+        message.author.send(`✉️ **Created invite:** ${inviteName} @ ${inviteTime}`)
+            .catch(console.error);
+
         return message.channel.send(embed())
             .then(message => {
                 inviteMessage = message;
-                console.log(`User ${initialMessage.author.username} created 'invite'`);
+                console.log(`User ${initialMessage.author.username} created 'invite': ${inviteName} @ ${inviteTime}`);
 
                 message.react('✅')
                     .then(() => message.react('❌'))
@@ -140,14 +141,14 @@ module.exports = {
                             console.log(`Finished 'invite' for user ${initialMessage.author.username}`);
                         });
 
-                        const timer = setIntervalAsync(
+                        const timer = client.setInterval(
                             () => {
                                 inviteMessage.edit('', {embed: embed()})
                                     .then(message => inviteMessage = message)
                                     .catch(console.error);
 
                                 if (inviteTime.diff(moment()) <= 0) {
-                                    clearIntervalAsync(timer);
+                                    client.clearInterval(timer);
                                 }
                             },
                             ms('1m')

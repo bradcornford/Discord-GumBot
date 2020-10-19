@@ -28,22 +28,24 @@ module.exports = {
         let reminderMessage = extractMessageFromInput(args);
         let reminderUser = extractUserFromInput(args, client);
 
-        return message.channel.send(`📝 **Created reminder:**`)
-            .then(() => {
-                console.log(`User ${initialMessage.author.username} created 'reminder'`);
+        message.author.send(`📝 **Created reminder:** ${reminderMessage} ~ ${reminderUser} @ ${reminderTime}`)
+            .catch(console.error);
 
-                client.setTimeout(
-                    () => {
-                        if (reminderUser === 'me') {
-                            initialMessage.reply(`**Reminder:** ${reminderMessage}`);
-                        } else {
-                            message.channel.send(`**Reminder:** ${reminderUser}, ${reminderMessage}`);
-                        }
+        console.log(`User ${initialMessage.author.username} created 'reminder': ${reminderMessage} ~ ${reminderUser} @ ${reminderTime}`);
 
-                        console.log(`Finished 'reminder' for user ${initialMessage.author.username}`);
-                    },
-                    reminderTime.diff(now)
-                );
-            });
+        client.setTimeout(
+            () => {
+                if (reminderUser === 'me') {
+                    initialMessage.reply(`**Reminder:** ${reminderMessage}`);
+                } else {
+                    message.channel.send(`**Reminder:** ${reminderUser}, ${reminderMessage}`);
+                }
+
+                console.log(`Finished 'reminder' for user ${initialMessage.author.username}`);
+            },
+            reminderTime.diff(now)
+        );
+
+        return message;
     },
 };

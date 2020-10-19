@@ -2,14 +2,13 @@ const moment = require('moment-timezone');
 
 const ms = require('string-to-ms');
 
-const { setIntervalAsync, clearIntervalAsync } = require('set-interval-async/dynamic');
-
-const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractUserFromInput, extractTimeFromInput } = require('../includes/input');
+const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require('../includes/input');
 
 module.exports = {
     name: 'countdown',
     description: 'Create a countdown',
     parameters: [
+        '(Event)',
         '~',
         '[' , 'me', '|', 'everyone', '|', 'here', '|', 'username', ']',
         '@',
@@ -26,24 +25,27 @@ module.exports = {
         }
 
         const initialMessage = message;
-        let countdownTime = extractTimeFromInput(args);
-        let countdownMessage;
+        let countdownMessage = extractMessageFromInput(args);
         let countdownUser = extractUserFromInput(args, client);
+        let countdownTime = extractTimeFromInput(args);
 
         let countdown = () => {
             if (countdownTime.diff(moment()) <= 0) {
                 return `**Countdown:** Completed`;
             }
 
-            return `**Countdown:** ${countdownTime.fromNow(true)} left`;
+            return `**Countdown:** ${countdownTime.fromNow(true)} left ${(countdownMessage !== '' ? `until ${countdownMessage}` : '')}`;
         };
+
+        message.author.send(`⏰ **Created countdown:** ${countdownMessage} ~ ${countdownUser} @ ${countdownTime}`)
+            .catch(console.error);
 
         return message.channel.send(countdown())
             .then(message => {
                 countdownMessage = message;
-                console.log(`User ${initialMessage.author.username} created 'countdown'`);
+                console.log(`User ${initialMessage.author.username} created 'countdown': ${countdownMessage} ~ ${countdownUser} @ ${countdownTime}`);
 
-                const timer = setIntervalAsync(
+                const timer = client.setInterval(
                     () => {
                         countdownMessage.edit(countdown())
                             .then(message => countdownMessage = message)
@@ -58,7 +60,7 @@ module.exports = {
 
                             console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);
 
-                            clearIntervalAsync(timer);
+                            client.clearInterval(timer);
                         }
                     },
                     ms('1m')

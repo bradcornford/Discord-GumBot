@@ -1,5 +1,3 @@
-const { setIntervalAsync } = require('set-interval-async/dynamic')
-
 const { getFacebookPosts, extractCodesFromFacebookPosts, extractUpdatesFromFacebookPosts } = require('../includes/facebook')
 
 const config = require('../includes/config');
@@ -20,7 +18,7 @@ module.exports = (client) => {
     getFacebookPosts()
         .then((posts) => extractCodesFromFacebookPosts(posts, 'initial', codesChannel))
         .then((posts) => extractUpdatesFromFacebookPosts(posts, 'initial', updatesChannel))
-        .then(() => setIntervalAsync(
+        .then(() => client.setInterval(
                 async () => {
                     await getFacebookPosts()
                         .then((posts) => extractCodesFromFacebookPosts(posts, 'poll', codesChannel))

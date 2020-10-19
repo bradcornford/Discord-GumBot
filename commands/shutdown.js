@@ -1,5 +1,3 @@
-const { setIntervalAsync } = require('set-interval-async/dynamic')
-
 module.exports = {
     name: 'shutdown',
     description: 'Shutdown the bot',
@@ -27,7 +25,7 @@ module.exports = {
                                     console.log(`Result for 'shutdown': confirmed`);
                                     initialMessage.reply('Shutting down!');
 
-                                    setIntervalAsync(
+                                    client.setInterval(
                                         () => {
                                             client.destroy();
                                             process.exit();

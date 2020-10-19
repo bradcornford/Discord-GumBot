@@ -24,9 +24,12 @@ module.exports = {
         let pollMessage = extractMessageFromInput(args);
         const reactedUsers = new Collection();
 
+        message.author.send(`📋 **Created poll:** ${pollMessage} @ ${pollTime}`)
+            .catch(console.error);
+
         return message.channel.send(`📋 **${pollMessage}**`)
             .then(message => {
-                console.log(`User ${initialMessage.author.username} created 'poll'`);
+                console.log(`User ${initialMessage.author.username} created 'poll': ${pollMessage} @ ${pollTime}`);
 
                 message.react('👍')
                     .then(() => message.react('👎'))
