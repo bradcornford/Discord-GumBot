@@ -6,7 +6,9 @@ const ms = require('string-to-ms');
 
 const config = require('../includes/config');
 
-const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require("../includes/input");
+const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require('../includes/input');
+
+const { timeRemaining } = require('../includes/timeRemaining');
 
 module.exports = {
     name: 'invite',
@@ -56,7 +58,7 @@ module.exports = {
                     },
                 )
                 .setAuthor(`Created by ${message.author.username}`)
-                .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs ${inviteTime.fromNow()}`)
+                .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs in ${timeRemaining(inviteTime.diff(moment()))}`)
                 .setTimestamp();
         };
 
@@ -137,8 +139,9 @@ module.exports = {
                         });
 
                         collector.on('end', () => {
-                            initialMessage.reply(`**Invitation has expired**`);
+                            initialMessage.reply(`**Invitation has expired for ${inviteName}**`);
                             console.log(`Finished 'invite' for user ${initialMessage.author.username}`);
+                            client.clearInterval(timer);
                         });
 
                         const timer = client.setInterval(

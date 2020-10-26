@@ -4,6 +4,8 @@ const ms = require('string-to-ms');
 
 const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require('../includes/input');
 
+const { timeRemaining } = require('../includes/timeRemaining');
+
 module.exports = {
     name: 'countdown',
     description: 'Create a countdown',
@@ -24,26 +26,37 @@ module.exports = {
             return message;
         }
 
+        let now = moment();
         const initialMessage = message;
-        let countdownMessage = extractMessageFromInput(args);
+        let countdownMessage = message;
+        let countdownEvent = extractMessageFromInput(args);
         let countdownUser = extractUserFromInput(args, client);
         let countdownTime = extractTimeFromInput(args);
 
         let countdown = () => {
-            if (countdownTime.diff(moment()) <= 0) {
-                return `**Countdown:** Completed`;
+            let remaining = countdownTime.diff(moment());
+
+            if (remaining <= 0) {
+                return `**Countdown:** Completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}`;
             }
 
-            return `**Countdown:** ${countdownTime.fromNow(true)} left ${(countdownMessage !== '' ? `until ${countdownMessage}` : '')}`;
+            return `**Countdown:** ${timeRemaining(remaining)} left${(countdownEvent !== '' ? ` until: ${countdownEvent}` : '')}`;
         };
 
-        message.author.send(`⏰ **Created countdown:** ${countdownMessage} ~ ${countdownUser} @ ${countdownTime}`)
+        message.author.send(`⏰ **Created countdown:** ${countdownEvent} ~ ${countdownUser} @ ${countdownTime}`)
             .catch(console.error);
 
         return message.channel.send(countdown())
             .then(message => {
                 countdownMessage = message;
-                console.log(`User ${initialMessage.author.username} created 'countdown': ${countdownMessage} ~ ${countdownUser} @ ${countdownTime}`);
+                console.log(`User ${initialMessage.author.username} created 'countdown': ${countdownEvent} ~ ${countdownUser} @ ${countdownTime}`);
+
+                const collector = message.createReactionCollector(() => { return false; }, { time: countdownTime.diff(now), dispose: true });
+
+                collector.on('end', () => {
+                    console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);
+                    client.clearInterval(timer);
+                });
 
                 const timer = client.setInterval(
                     () => {
@@ -53,9 +66,9 @@ module.exports = {
 
                         if (countdownTime.diff(moment()) <= 0) {
                             if (countdownUser === 'me') {
-                                initialMessage.reply(`**Countdown has completed**`);
+                                initialMessage.reply(`**Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`);
                             } else {
-                                message.channel.send(`**${countdownUser}, Countdown has completed**`);
+                                message.channel.send(`**${countdownUser}, Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`);
                             }
 
                             console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);

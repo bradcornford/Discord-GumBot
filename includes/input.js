@@ -14,7 +14,7 @@ const validateMessageFromInput = (args, message) => {
 
 const validateUserFromInput = (args, message) => {
     if (args.indexOf('~') === -1) {
-        message.reply(`You didn\'t specify the reminder user or group!`);
+        message.reply(`You didn\'t specify the user or group!`);
 
         return false;
     }
@@ -24,7 +24,7 @@ const validateUserFromInput = (args, message) => {
 
 const validateTimeFromInput = (args, message) => {
     if (args.indexOf('@') === -1) {
-        message.reply(`You didn\'t specify a date and time for the command!`);
+        message.reply(`You didn\'t specify a date and time!`);
 
         return false;
     }
@@ -63,7 +63,7 @@ const validateTimeFromInput = (args, message) => {
     }
 
     if (time.diff(moment()) <= 0) {
-        message.reply(`Date time occurs in the past!`);
+        message.reply(`Date/time occurs in the past!`);
 
         return false;
     }
