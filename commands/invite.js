@@ -148,7 +148,10 @@ module.exports = {
                             () => {
                                 inviteMessage.edit('', {embed: embed()})
                                     .then(message => inviteMessage = message)
-                                    .catch(console.error);
+                                    .catch(error => {
+                                        console.error(error);
+                                        client.clearInterval(timer);
+                                    });
 
                                 if (inviteTime.diff(moment()) <= 0) {
                                     client.clearInterval(timer);

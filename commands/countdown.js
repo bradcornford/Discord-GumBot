@@ -62,13 +62,18 @@ module.exports = {
                     () => {
                         countdownMessage.edit(countdown())
                             .then(message => countdownMessage = message)
-                            .catch(console.error);
+                            .catch(error => {
+                                console.error(error);
+                                client.clearInterval(timer);
+                            });
 
                         if (countdownTime.diff(moment()) <= 0) {
                             if (countdownUser === 'me') {
-                                initialMessage.reply(`**Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`);
+                                initialMessage.reply(`**Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`)
+                                    .catch(console.error);
                             } else {
-                                message.channel.send(`**${countdownUser}, Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`);
+                                message.channel.send(`**${countdownUser}, Countdown has completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}**`)
+                                    .catch(console.error);
                             }
 
                             console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);

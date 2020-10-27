@@ -70,7 +70,8 @@ module.exports = {
                             let yes = (typeof collected.get('👍') === 'undefined' ? 0 : (collected.get('👍').count - 1));
                             let no = (typeof collected.get('👎') === 'undefined' ? 0 : (collected.get('👎').count - 1));
 
-                            initialMessage.reply(`**Results are in:** ${yes} Yes / ${no} No`);
+                            initialMessage.reply(`**Results are in:** ${yes} Yes / ${no} No`)
+                                .catch(console.error);
 
                             console.log(`Results for user ${initialMessage.author.username} 'poll': ${yes} Yes / ${no} No`);
                         });
