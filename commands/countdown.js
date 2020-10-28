@@ -51,7 +51,7 @@ module.exports = {
                 countdownMessage = message;
                 console.log(`User ${initialMessage.author.username} created 'countdown': ${countdownEvent} ~ ${countdownUser} @ ${countdownTime}`);
 
-                const collector = message.createReactionCollector(() => { return false; }, { time: countdownTime.diff(now), dispose: true });
+                const collector = message.createReactionCollector(() => { return false; }, { time: countdownTime.diff(now) + ms('1m'), dispose: true });
 
                 collector.on('end', () => {
                     console.log(`Finished 'countdown' for user ${initialMessage.author.username}`);

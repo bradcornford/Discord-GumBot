@@ -96,7 +96,7 @@ module.exports = {
                             return true;
                         };
 
-                        const collector = message.createReactionCollector(filter, { time: inviteTime.diff(now), dispose: true });
+                        const collector = message.createReactionCollector(filter, { time: inviteTime.diff(now) + ms('1m'), dispose: true });
 
                         collector.on('collect', (reaction, user) => {
                             reactedUsers.set(user.id, user.username);
