@@ -4,13 +4,13 @@ const ms = require('string-to-ms');
 
 const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require('../includes/input');
 
-const { timeRemaining } = require('../includes/timeRemaining');
+const { timeDuration } = require('../includes/timeDuration');
 
 module.exports = {
     name: 'countdown',
     description: 'Create a countdown',
     parameters: [
-        '(Event)',
+        '(Event Name)',
         '~',
         '[' , 'me', '|', 'everyone', '|', 'here', '|', 'username', ']',
         '@',
@@ -40,7 +40,7 @@ module.exports = {
                 return `**Countdown:** Completed${(countdownEvent !== '' ? ` for: ${countdownEvent}` : '')}`;
             }
 
-            return `**Countdown:** ${timeRemaining(remaining)} left${(countdownEvent !== '' ? ` until: ${countdownEvent}` : '')}`;
+            return `**Countdown:** ${timeDuration(remaining)} left${(countdownEvent !== '' ? ` until: ${countdownEvent}` : '')}`;
         };
 
         message.author.send(`⏰ **Created countdown:** ${countdownEvent} ~ ${countdownUser} @ ${countdownTime}`)

@@ -8,7 +8,7 @@ const config = require('../includes/config');
 
 const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require('../includes/input');
 
-const { timeRemaining } = require('../includes/timeRemaining');
+const { timeDuration } = require('../includes/timeDuration');
 
 module.exports = {
     name: 'invite',
@@ -58,7 +58,7 @@ module.exports = {
                     },
                 )
                 .setAuthor(`Created by ${message.author.username}`)
-                .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs in ${timeRemaining(inviteTime.diff(moment()))}`)
+                .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs in ${timeDuration(inviteTime.diff(moment()))}`)
                 .setTimestamp();
         };
 

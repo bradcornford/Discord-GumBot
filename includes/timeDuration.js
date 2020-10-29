@@ -21,36 +21,43 @@ const TIME_HOUR = (TIME_MINUTE * 60);
 const TIME_DAY = (TIME_HOUR * 24);
 const TIME_WEEK = (TIME_DAY * 7);
 
-const timeRemaining = (time, short = false) => {
+const timeDuration = (time, short= false, useWeeks = true) => {
     let strings = (short ? STRINGS.short : STRINGS.long);
 
     if (time < TIME_MINUTE) {
         return strings.lessThanAMinute;
     }
 
-    const track = (time < (2 * TIME_WEEK) ? (time < (2 * TIME_DAY) ? 1 : 5) : 9);
-
     const weeks = Math.floor(time / TIME_WEEK);
-    const days = Math.floor((time % TIME_WEEK) / TIME_DAY);
+    const days = Math.floor((useWeeks ? (time % TIME_WEEK) : time) / TIME_DAY);
     const hours = Math.floor((time % TIME_DAY) / TIME_HOUR);
     const minutes = Math.floor((time % TIME_HOUR) / TIME_MINUTE);
 
     let string = '';
 
-    if (weeks) string = `${weeks}${!short ? ' ' : ''}${strings.week}${!short && weeks > 1 ? 's' : ''} `;
-    if (days) string += `${days}${!short ? ' ' : ''}${strings.day}${!short && days > 1 ? 's' : ''} `;
+    if (useWeeks && weeks) {
+        string = `${weeks}${!short ? ' ' : ''}${strings.week}${!short && weeks > 1 ? 's' : ''} `;
+    }
 
-    if (hours && track < 9) {
+    if (days) {
+        string += `${days}${!short ? ' ' : ''}${strings.day}${!short && days > 1 ? 's' : ''} `;
+    }
+
+    if (hours) {
         string += `${hours}${!short ? ' ' : ''}${strings.hour}${!short && hours > 1 ? 's' : ''} `;
     }
 
-    if (minutes && track < 5) {
+    if (minutes) {
         string += `${minutes}${!short ? ' ' : ''}${strings.minute}${!short && minutes > 1 ? 's' : ''} `;
     }
 
     let remaining = string.trim().split(' ');
 
     if (!short) {
+        if (remaining.length > 7) {
+            remaining[3] += ',';
+        }
+
         if (remaining.length > 5) {
             remaining[1] += ',';
         }
@@ -63,4 +70,4 @@ const timeRemaining = (time, short = false) => {
     return remaining.join(' ');
 }
 
-exports.timeRemaining = timeRemaining;
+exports.timeDuration = timeDuration;
