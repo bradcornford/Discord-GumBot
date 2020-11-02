@@ -18,4 +18,8 @@ services:
       TZ: "Europe/London"
     env_file:
       - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
     restart: unless-stopped

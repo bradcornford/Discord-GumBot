@@ -44,8 +44,18 @@ module.exports = {
                     inline: true,
                 },
                 {
+                    name: 'Brussels',
+                    value: gameTime.clone().tz('Europe/Brussels').format('hh:mm A'),
+                    inline: true,
+                },
+                {
                     name: 'India',
                     value: gameTime.clone().tz('Asia/Colombo').format('hh:mm A'),
+                    inline: true,
+                },
+                {
+                    name: 'New Zeland',
+                    value: gameTime.clone().tz('Pacific/Auckland').format('hh:mm A'),
                     inline: true,
                 },
                 {
