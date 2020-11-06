@@ -114,7 +114,6 @@ module.exports = {
                             }
 
                             inviteMessage.edit('', {embed: embed()})
-                                .then(message => inviteMessage = message)
                                 .catch(console.error);
                         });
 
@@ -134,7 +133,6 @@ module.exports = {
                             }
 
                             inviteMessage.edit('', {embed: embed()})
-                                .then(message => inviteMessage = message)
                                 .catch(console.error);
                         });
 
@@ -147,7 +145,6 @@ module.exports = {
                         const timer = client.setInterval(
                             () => {
                                 inviteMessage.edit('', {embed: embed()})
-                                    .then(message => inviteMessage = message)
                                     .catch(error => {
                                         console.error(error);
                                         client.clearInterval(timer);
