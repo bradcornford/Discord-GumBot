@@ -36,5 +36,17 @@ client.on('messageReactionRemove', async (reaction, user) => {
     await require('./events/messageReactionRemove')(reaction, user);
 });
 
+client.on('guildMemberAdd', async (member) => {
+    await require('./events/guildMemberAdd')(member);
+});
+
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    await require('./events/guildMemberUpdate')(oldMember, newMember);
+});
+
+client.on('guildMemberRemove', async (member) => {
+    await require('./events/guildMemberRemove')(member);
+});
+
 client.login(config.discordToken)
     .catch(console.error);
