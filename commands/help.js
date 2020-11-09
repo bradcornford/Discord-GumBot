@@ -25,6 +25,6 @@ module.exports = {
             }
         });
 
-        return message.channel.send(embed);
+        return message.author.send(embed);
     },
 };

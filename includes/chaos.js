@@ -18,6 +18,41 @@ const getNextChaosDatetime = () => {
     );
 }
 
+const getNextChaosGiantCreatureRespawnDatetime = () => {
+    let currentlyInChaos = currentlyInChaosPeriod();
+    let nextChaosTime = getNextChaosDatetime();
+    let nextChaosGiantCreatureTime;
+
+    if (currentlyInChaos) {
+        let currentChaosTime = getCurrentChaosDatetime();
+
+        if (now.diff(currentChaosTime) < ms('3h')) {
+            nextChaosGiantCreatureTime = currentChaosTime.add(ms('3h'));
+        } else if (now.diff(currentChaosTime) < ms('6h')) {
+            nextChaosGiantCreatureTime = currentChaosTime.add(ms('6h'));
+        } else if (now.diff(currentChaosTime) < ms('9h')) {
+            nextChaosGiantCreatureTime = currentChaosTime.add(ms('9h'));
+        } else {
+            nextChaosGiantCreatureTime = nextChaosTime;
+        }
+    } else {
+        nextChaosGiantCreatureTime = nextChaosTime;
+    }
+
+    return nextChaosGiantCreatureTime;
+}
+
+const getNextChaosGiantCreatureRespawnDatetimes = () => {
+    let nextChaosTime = getNextChaosDatetime();
+
+    return [
+        nextChaosTime,
+        nextChaosTime.clone().add(ms('3h')),
+        nextChaosTime.clone().add(ms('6h')),
+        nextChaosTime.clone().add(ms('9h'))
+    ];
+}
+
 const getCurrentChaosDatetime = () => {
     let now = moment().tz('Europe/London');
     let chaosCount = Math.ceil(now.diff(initialChaosStartTime) / ms('14d')) - 1;
@@ -38,3 +73,5 @@ const currentlyInChaosPeriod = () => {
 exports.getNextChaosDatetime = getNextChaosDatetime;
 exports.currentlyInChaosPeriod = currentlyInChaosPeriod;
 exports.getCurrentChaosDatetime = getCurrentChaosDatetime;
+exports.getNextChaosGiantCreatureRespawnDatetime = getNextChaosGiantCreatureRespawnDatetime;
+exports.getNextChaosGiantCreatureRespawnDatetimes = getNextChaosGiantCreatureRespawnDatetimes;
