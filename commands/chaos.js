@@ -1,4 +1,4 @@
-const { getNextChaosDatetime } = require('../includes/chaos');
+const { getNextChaosDatetime, getDurationRelativeToReset } = require('../includes/chaos');
 
 module.exports = {
     name: 'chaos',
@@ -6,6 +6,8 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
-        return message.channel.send(`🚀 **Next Chaos:** ${getNextChaosDatetime()}`);
+        let nextChaosTime = getNextChaosDatetime();
+
+        return message.channel.send(`🚀 **Next Chaos:** ${nextChaosTime} (Reset +${getDurationRelativeToReset(nextChaosTime)})`);
     },
 };

@@ -1,6 +1,7 @@
 const moment = require('moment-timezone');
 
 const ms = require('string-to-ms');
+const { timeDuration } = require("./timeDuration");
 
 const initialChaosStartTime = moment('10-10-2020 13:00:00', 'DD-MM-YYYY hh:mm:ss').tz('Europe/London');
 const chaosInterval = ms('14d 2h');
@@ -16,6 +17,12 @@ const getNextChaosDatetime = () => {
         (chaosPeriod * chaosCount) -
         (Math.floor(chaosCount / 2) * chaosAlternatingDifference)
     );
+}
+
+const getDurationRelativeToReset = (time) => {
+    let gameResetTime = time.tz('Asia/Shanghai').clone().startOf('day');
+
+    return timeDuration((time.subtract(gameResetTime)), true);
 }
 
 const getNextChaosGiantCreatureRespawnDatetime = () => {
@@ -71,6 +78,7 @@ const currentlyInChaosPeriod = () => {
 }
 
 exports.getNextChaosDatetime = getNextChaosDatetime;
+exports.getDurationRelativeToReset = getDurationRelativeToReset;
 exports.currentlyInChaosPeriod = currentlyInChaosPeriod;
 exports.getCurrentChaosDatetime = getCurrentChaosDatetime;
 exports.getNextChaosGiantCreatureRespawnDatetime = getNextChaosGiantCreatureRespawnDatetime;

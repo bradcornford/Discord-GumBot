@@ -1,4 +1,4 @@
-const { getNextChaosGiantCreatureRespawnDatetime } = require('../includes/chaos');
+const { getNextChaosGiantCreatureRespawnDatetime, getDurationRelativeToReset } = require('../includes/chaos');
 
 module.exports = {
     name: 'creature',
@@ -8,6 +8,6 @@ module.exports = {
     run: async (client, message, args) => {
         let nextChaosGiantCreatureTime = getNextChaosGiantCreatureRespawnDatetime();
 
-        return message.channel.send(`👹 **Next Chaos Giant Creature respawn:** ${nextChaosGiantCreatureTime}`);
+        return message.channel.send(`👹 **Next Chaos Giant Creature respawn:** ${nextChaosGiantCreatureTime} (Reset +${getDurationRelativeToReset(nextChaosGiantCreatureTime)})`);
     },
 };
