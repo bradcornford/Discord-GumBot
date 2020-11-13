@@ -1,5 +1,3 @@
-const ms = require('string-to-ms');
-
 const { getNextChaosDatetime, getNextChaosGiantCreatureRespawnDatetimes } = require('../includes/chaos');
 
 module.exports = {
@@ -13,7 +11,6 @@ module.exports = {
         let nextChaosTime = getNextChaosDatetime();
         let nextChaosGiantCreatureRespawnTimes = getNextChaosGiantCreatureRespawnDatetimes();
 
-        // Chaos countdown
         return countdown.run(
             client,
             message,
@@ -23,7 +20,7 @@ module.exports = {
                 '~',
                 'everyone',
                 '@',
-                nextChaosTime.format('DD-MM-YYYY hh:mm')
+                ...nextChaosTime.format('DD-MM-YYYY HH:mm').split(' ')
             ]
         )
             .then(() => {
@@ -38,7 +35,7 @@ module.exports = {
                         '~',
                         'everyone',
                         '@',
-                        nextChaosTime.clone().subtract(ms('10m')).format('DD-MM-YYYY hh:mm')
+                        ...nextChaosTime.clone().subtract(10, 'minutes').format('DD-MM-YYYY HH:mm').split(' ')
                     ]
                 );
             })
@@ -57,7 +54,7 @@ module.exports = {
                             '~',
                             'everyone',
                             '@',
-                            respawnTime.clone().subtract(ms('5m')).format('DD-MM-YYYY hh:mm')
+                            ...respawnTime.clone().subtract(5, 'minutes').format('DD-MM-YYYY HH:mm').split(' ')
                         ]
                     );
                 });

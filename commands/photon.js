@@ -1,6 +1,4 @@
-const ms = require('string-to-ms');
-
-const { extractTimeFromInput } = require('../includes/input');
+const { extractTimeFromInput, validateTimeFromInput } = require('../includes/input');
 
 module.exports = {
     name: 'photon',
@@ -11,13 +9,15 @@ module.exports = {
         let invite = require(`../commands/invite`);
         let remind = require(`../commands/remind`);
 
+        if (!validateTimeFromInput(args, message)) {
+            return message;
+        }
+
         return invite.run(client, message, ['Photon', 'Party', ...args])
             .then(() => {
                 message.channel.send('^Use the tick on the form __only__ to confirm if you are using a *Photon Computer*.');
             })
             .then(() => {
-                let reminderTime = extractTimeFromInput(args);
-
                 remind.run(
                     client,
                     message,
@@ -29,7 +29,7 @@ module.exports = {
                         '~',
                         'everyone',
                         '@',
-                        reminderTime.subtract(ms('10m')).format('DD-MM-YYYY hh:mm')
+                        ...extractTimeFromInput(args).subtract(10, 'minutes').format('DD-MM-YYYY HH:mm').split(' ')
                     ]
                 );
             });
