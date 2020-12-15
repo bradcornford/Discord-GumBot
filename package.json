@@ -1,6 +1,6 @@
 {
   "name": "discord-gumbot",
-  "version": "1.31.6",
+  "version": "1.31.7",
   "description": "A Discord gumballs and dungeons bot",
   "main": "index.js",
   "scripts": {
@@ -11,13 +11,13 @@
   "dependencies": {
     "@mikemcbride/dad-jokes": "^1.0.0",
     "cheerio": "^1.0.0-rc.3",
-    "dateformat": "^3.0.3",
-    "discord.js": "^12.4.1",
+    "dateformat": "^4.3.1",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "html-to-text": "^5.1.1",
     "log-timestamp": "^0.3.0",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.32",
     "process": "^0.11.10",
     "random-animals-apis": "^1.1.0",
     "request": "^2.88.2",
