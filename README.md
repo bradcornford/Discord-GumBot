@@ -1,6 +1,7 @@
 # Discord GumBot
 
-Provides useful commands for Gumballs and Dungeons such as:
+Provides useful commands for Gumballs and Dungeons Discord servers, such as:
+
 - 8 Ball
 - Accelerator calculator
 - Announcements
