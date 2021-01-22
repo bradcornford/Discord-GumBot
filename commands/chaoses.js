@@ -47,7 +47,7 @@ module.exports = {
                         [
                             'Chaos',
                             'Giant',
-                            'Create',
+                            'Creature',
                             (index === 0 ? 'spawns' : 'respawns'),
                             'in',
                             '5m',
