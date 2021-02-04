@@ -12,7 +12,7 @@ const getNextChaosDatetime = () => {
     let now = moment().tz('Europe/London');
     let countDays = (now.diff(initialChaosStartTime) / ms('1d'));
     let countRotations = (countDays / 28);
-    let chaosCount = Math.ceil(countRotations + Math.floor(countRotations)) + ((countDays % 28) >= 14.583333333333336 ? 1 : 0);
+    let chaosCount = Math.ceil(countRotations + Math.floor(countRotations)) + ((countDays % 28) >= 14.583333333333 ? 1 : 0);
 
     return initialChaosStartTime.clone()
         .add(
