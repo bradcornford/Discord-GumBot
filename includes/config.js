@@ -3,10 +3,10 @@ const packageJson = require('../package.json');
 
 const PREFIX = process.env.BOT_PREFIX || '!';
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN || '';
-const DISCORD_WELCOME_CHANNEL = process.env.DISCORD_WELCOME_CHANNEL || 'welcome';
 const DISCORD_DEFAULT_ROLE = process.env.DISCORD_DEFAULT_ROLE || 'guest';
 const DISCORD_CODES_CHANNEL = process.env.DISCORD_CODES_CHANNEL || 'codes';
 const DISCORD_UPDATES_CHANNEL = process.env.DISCORD_UPDATES_CHANNEL || 'announcements';
+const DISCORD_README_CHANNEL = process.env.DISCORD_README_CHANNEL || 'read-me';
 const POLL_INTERVAL = ms(process.env.POLL_INTERVAL) || ms('1h');
 const CODES = [];
 const UPDATES = [];
@@ -23,10 +23,10 @@ const COLORS = {
 
 exports.prefix = PREFIX;
 exports.discordToken = DISCORD_TOKEN;
-exports.discordWelcomeChannel = DISCORD_WELCOME_CHANNEL;
 exports.discordDefaultRole = DISCORD_DEFAULT_ROLE;
 exports.discordCodesChannel = DISCORD_CODES_CHANNEL;
 exports.discordUpdatesChannel = DISCORD_UPDATES_CHANNEL;
+exports.discordReadmeChannel = DISCORD_README_CHANNEL;
 exports.pollInterval = POLL_INTERVAL;
 exports.codes = CODES;
 exports.updates = UPDATES;
