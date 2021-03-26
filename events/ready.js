@@ -12,17 +12,48 @@ module.exports = (client) => {
         .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
         .catch(console.error);
 
-    let codesChannel = client.channels.cache.find(channel => channel.name === config.discordCodesChannel)
-    let updatesChannel = client.channels.cache.find(channel => channel.name === config.discordUpdatesChannel)
+    let codesChannel = client.channels.cache.find(channel => channel.name === config.discordCodesChannel);
+
+    if (!codesChannel) {
+        console.error(`Unable to find the codes channel "${config.discordCodesChannel}"`);
+    }
+
+    let updatesChannel = client.channels.cache.find(channel => channel.name === config.discordUpdatesChannel);
+
+    if (!updatesChannel) {
+        console.error(`Unable to find the updates channel "${config.discordUpdatesChannel}"`);
+    }
+
+    if (!codesChannel && !updatesChannel) {
+        console.error(`Unable to find the codes/updates channels skipping Facebook requests`);
+
+        return;
+    }
+
+    let codeExtraction = (posts, method) => {
+        if (!codesChannel) {
+            return posts;
+        }
+
+        return extractCodesFromFacebookPosts(posts, method, codesChannel)
+    }
+
+    let updateExtraction = (posts, method) => {
+        if (!updatesChannel) {
+            return posts;
+        }
+
+        return extractUpdatesFromFacebookPosts(posts, method, updatesChannel)
+    }
 
     getFacebookPosts()
-        .then((posts) => extractCodesFromFacebookPosts(posts, 'initial', codesChannel))
-        .then((posts) => extractUpdatesFromFacebookPosts(posts, 'initial', updatesChannel))
+        .then((posts) => codeExtraction(posts, 'initial'))
+        .then((posts) => updateExtraction(posts, 'initial'))
         .then(() => client.setInterval(
                 async () => {
                     await getFacebookPosts()
-                        .then((posts) => extractCodesFromFacebookPosts(posts, 'poll', codesChannel))
-                        .then((posts) => extractUpdatesFromFacebookPosts(posts, 'poll', updatesChannel))
+                        .then((posts) => codeExtraction(posts, 'poll'))
+                        .then((posts) => updateExtraction(posts, 'poll'))
                         .catch(console.error);
                 },
                 config.pollInterval
