@@ -53,7 +53,9 @@ The application can be run using docker-compose container with the following:
 ### Environment Variables
 
 - DISCORD_TOKEN  - Discord API token
-- DISCORD_WELCOME_CHANNEL - The channel welcome announcements should be posted to
+- DISCORD_WELCOME_CHANNEL - The channel welcome announcements should be posted to. Can be false to DM the user instead
+- DISCORD_WELCOME_MESSAGE - The welcome message to a new joiners
+- DISCORD_README_CHANNEL - The readme channel
 - DISCORD_DEFAULT_ROLE - The default role for new joiners
 - DISCORD_CODES_CHANNEL - The channel code announcements should be posted to
 - DISCORD_UPDATES_CHANNEL - The channel update announcements should be posted to
@@ -66,12 +68,18 @@ The application can be run using docker-compose container with the following:
         image: bradcornford/discord-gumbot:latest
         container_name: gumbot
         environment:
-            TZ: "Europe/London"
-            DISCORD_TOKEN: "XXX"
-            DISCORD_WELCOME_CHANNEL: "welcome"
-            DISCORD_DEFAULT_ROLE: "guest"
-            DISCORD_CODES_CHANNEL: "general"
-            DISCORD_UPDATES_CHANNEL: "general"
-            POLL_INTERVAL: "1m"
-            BOT_PREFIX: "!"
+            - TZ=Europe/London
+            - POLL_INTERVAL=15m
+            - DISCORD_TOKEN=XXX
+            - DISCORD_WELCOME_CHANNEL=welcome
+            - DISCORD_WELCOME_MESSAGE="Hello %USER%, and welcome to the %GUILD% server.\nYou've been assigned the %ROLE% role.\nPlease be sure to check the %README%."
+            - DISCORD_DEFAULT_ROLE=guest
+            - DISCORD_CODES_CHANNEL=general
+            - DISCORD_UPDATES_CHANNEL=general
+            - DISCORD_README_CHANNEL=readme
+            - BOT_PREFIX=!
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "50m"
         restart: unless-stopped
