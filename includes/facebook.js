@@ -51,7 +51,7 @@ const matchCodeInFacebookPost = (post) => {
     return false;
 }
 
-const extractCodesFromFacebookPosts = async (posts, type, channel) => {
+const extractCodesFromFacebookPosts = async (posts, type, channels) => {
     for (const post of posts) {
         let code = matchCodeInFacebookPost(post);
 
@@ -61,9 +61,11 @@ const extractCodesFromFacebookPosts = async (posts, type, channel) => {
                 console.log(`Initial code: ${code}`);
             } else if (type === 'poll') {
                 config.codes.unshift({ 'code': code, 'date': post.created_at });
-                console.log(`Current code: ${code}`);
-                channel.send(code)
-                    .catch(console.error);
+                console.log(`Poll code: ${code}`);
+                channels.forEach((channel) => {
+                    channel.send(code)
+                        .catch(console.error);
+                });
             }
         }
     }
@@ -91,17 +93,17 @@ const matchUpdateInFacebookPost = (post) => {
     return false;
 }
 
-const extractUpdatesFromFacebookPosts = async (posts, type, channel) => {
+const extractUpdatesFromFacebookPosts = async (posts, type, channels) => {
     for (const post of posts) {
         let update = matchUpdateInFacebookPost(post);
 
         if (update !== false) {
             if (type === 'initial') {
-                config.updates.push({ 'version': update, 'date': post.created_at });
+                // config.updates.push({ 'version': update, 'date': post.created_at });
                 console.log(`Initial update: ${update}`);
             } else if (type === 'poll') {
                 config.updates.unshift({ 'version': update, 'date': post.created_at });
-                console.log(`Current update: ${update}`);
+                console.log(`Poll update: ${update}`);
 
                 let message = htmlToText.fromString(post.message).substring(1, 1024).split('See more')[0];
 
@@ -112,8 +114,10 @@ const extractUpdatesFromFacebookPosts = async (posts, type, channel) => {
                     .addField('Description', message)
                     .setURL(`https://www.facebook.com${post.message.match(/href="(.+)" /)[1]}`);
 
-                channel.send(embed)
-                    .catch(console.error);
+                channels.forEach((channel) => {
+                    channel.send(embed)
+                        .catch(console.error);
+                });
             }
         }
     }

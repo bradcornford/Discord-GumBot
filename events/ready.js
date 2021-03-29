@@ -12,38 +12,50 @@ module.exports = (client) => {
         .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
         .catch(console.error);
 
-    let codesChannel = client.channels.cache.find(channel => channel.name === config.discordCodesChannel);
+    const codesChannels = [];
 
-    if (!codesChannel) {
-        console.error(`Unable to find the codes channel "${config.discordCodesChannel}"`);
-    }
+    client.guilds.cache.map((guild) => {
+        let codeChannel = guild.channels.cache.find(channel => channel.name === config.discordCodesChannel);
 
-    let updatesChannel = client.channels.cache.find(channel => channel.name === config.discordUpdatesChannel);
+        if (codeChannel) {
+            codesChannels.push(codeChannel);
+        }
+    });
 
-    if (!updatesChannel) {
-        console.error(`Unable to find the updates channel "${config.discordUpdatesChannel}"`);
-    }
+    const updatesChannels = [];
 
-    if (!codesChannel && !updatesChannel) {
+    client.guilds.cache.map((guild) => {
+        let updatesChannel = guild.channels.cache.find(channel => channel.name === config.discordUpdatesChannel);
+
+        if (updatesChannel) {
+            updatesChannels.push(updatesChannel);
+        }
+    });
+
+    if (codesChannels.length === 0 && updatesChannels.length === 0) {
         console.error(`Unable to find the codes/updates channels skipping Facebook requests`);
 
         return;
     }
 
     let codeExtraction = (posts, method) => {
-        if (!codesChannel) {
+        if (codesChannels.length === 0) {
+            console.info(`Skipping code extraction as no codes channels available`);
+
             return posts;
         }
 
-        return extractCodesFromFacebookPosts(posts, method, codesChannel)
+        return extractCodesFromFacebookPosts(posts, method, codesChannels)
     }
 
     let updateExtraction = (posts, method) => {
-        if (!updatesChannel) {
+        if (!updatesChannels) {
+            console.info(`Skipping update extraction as no updates channels available`);
+
             return posts;
         }
 
-        return extractUpdatesFromFacebookPosts(posts, method, updatesChannel)
+        return extractUpdatesFromFacebookPosts(posts, method, updatesChannels)
     }
 
     getFacebookPosts()
