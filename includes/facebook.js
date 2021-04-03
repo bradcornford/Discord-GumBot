@@ -99,7 +99,7 @@ const extractUpdatesFromFacebookPosts = async (posts, type, channels) => {
 
         if (update !== false) {
             if (type === 'initial') {
-                // config.updates.push({ 'version': update, 'date': post.created_at });
+                config.updates.push({ 'version': update, 'date': post.created_at });
                 console.log(`Initial update: ${update}`);
             } else if (type === 'poll') {
                 config.updates.unshift({ 'version': update, 'date': post.created_at });
