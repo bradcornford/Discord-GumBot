@@ -15,21 +15,25 @@ module.exports = (client) => {
     const codesChannels = [];
 
     client.guilds.cache.map((guild) => {
-        let codeChannel = guild.channels.cache.find(channel => channel.name === config.discordCodesChannel);
+        config.discordCodesChannel.split(',').forEach((discordCodesChannel) => {
+            let codeChannel = guild.channels.cache.find(channel => channel.name === discordCodesChannel);
 
-        if (codeChannel) {
-            codesChannels.push(codeChannel);
-        }
+            if (codeChannel) {
+                codesChannels.push(codeChannel);
+            }
+        });
     });
 
     const updatesChannels = [];
 
     client.guilds.cache.map((guild) => {
-        let updatesChannel = guild.channels.cache.find(channel => channel.name === config.discordUpdatesChannel);
+        config.discordUpdatesChannel.split(',').forEach((discordUpdatesChannel) => {
+            let updatesChannel = guild.channels.cache.find(channel => channel.name === discordUpdatesChannel);
 
-        if (updatesChannel) {
-            updatesChannels.push(updatesChannel);
-        }
+            if (updatesChannel) {
+                updatesChannels.push(updatesChannel);
+            }
+        });
     });
 
     if (codesChannels.length === 0 && updatesChannels.length === 0) {
