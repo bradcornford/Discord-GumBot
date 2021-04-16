@@ -1,5 +1,6 @@
 const request = require('request-promise-native');
 const cheerio = require('cheerio');
+const moment = require('moment-timezone');
 
 const { MessageEmbed } = require('discord.js');
 
@@ -51,7 +52,7 @@ const matchCodeInFacebookPost = (post) => {
     return false;
 }
 
-const extractCodesFromFacebookPosts = async (posts, type, channels) => {
+const extractCodesFromFacebookPosts = async (client, posts, type, channels) => {
     for (const post of posts) {
         let code = matchCodeInFacebookPost(post);
 
@@ -93,7 +94,38 @@ const matchUpdateInFacebookPost = (post) => {
     return false;
 }
 
-const extractUpdatesFromFacebookPosts = async (posts, type, channels) => {
+const createUpdateReminder = (client, channels, message) => {
+    if (message.includes('Game Time')) {
+        let pattern = /: ?([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4} [0-9]{2}:[0-9]{2}) ?- ?[0-9]{2}:[0-9]{2}/;
+        let matches = message.match(pattern);
+
+        if (
+            matches !== null &&
+            matches[1] !== 'undefined'
+        ) {
+            let now = moment();
+            let maintenanceTime = moment.tz(matches[1], 'M/D/YYYY hh:mm', 'Asia/Shanghai')
+                .subtract(15, 'minutes')
+                .tz('Europe/London');
+            let maintenanceMessage = 'Scheduled server maintenance in 15m';
+            let maintenanceUser = '@everyone';
+
+            console.log(`Created 'maintenance reminder': ${maintenanceMessage} ~ ${maintenanceUser} @ ${maintenanceTime}`);
+
+            client.setTimeout(
+                () => {
+                    channels.forEach((channel) => {
+                        channel.send(`**Reminder:** ${maintenanceUser}, ${maintenanceMessage}`)
+                            .catch(console.error);
+                    });
+                },
+                maintenanceTime.diff(now)
+            );
+        }
+    }
+}
+
+const extractUpdatesFromFacebookPosts = async (client, posts, type, channels) => {
     for (const post of posts) {
         let update = matchUpdateInFacebookPost(post);
 
@@ -118,6 +150,8 @@ const extractUpdatesFromFacebookPosts = async (posts, type, channels) => {
                     channel.send(embed)
                         .catch(console.error);
                 });
+
+                createUpdateReminder(client, channels, message);
             }
         }
     }

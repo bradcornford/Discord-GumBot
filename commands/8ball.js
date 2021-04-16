@@ -1,4 +1,4 @@
-const { validateMessageFromInput } = require("../includes/input");
+const { validateMessageFromInput } = require('../includes/input');
 
 module.exports = {
     name: '8ball',

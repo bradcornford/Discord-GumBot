@@ -1,6 +1,6 @@
 const moment = require('moment-timezone');
 
-const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require("../includes/input");
+const { validateMessageFromInput, validateUserFromInput, validateTimeFromInput, extractMessageFromInput, extractUserFromInput, extractTimeFromInput } = require('../includes/input');
 
 module.exports = {
     name: 'remind',

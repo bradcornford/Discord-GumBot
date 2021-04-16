@@ -1,4 +1,4 @@
-const animalAPI = require("random-animals-api");
+const animals = require('random-animal.js');
 
 module.exports = {
     name: 'dog',
@@ -6,7 +6,7 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
-        return animalAPI.dog()
+        return animals.randomDog()
             .then(link => message.channel.send(`🐕 **Dog picture**: ${link}`))
             .catch(console.error);
     },

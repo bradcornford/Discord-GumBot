@@ -38,34 +38,34 @@ module.exports = (client) => {
         return;
     }
 
-    let codeExtraction = (posts, method) => {
+    let codeExtraction = (client, posts, method) => {
         if (codesChannels.length === 0) {
             console.info(`Skipping code extraction as no codes channels available`);
 
             return posts;
         }
 
-        return extractCodesFromFacebookPosts(posts, method, codesChannels)
+        return extractCodesFromFacebookPosts(client, posts, method, codesChannels)
     }
 
-    let updateExtraction = (posts, method) => {
+    let updateExtraction = (client, posts, method) => {
         if (!updatesChannels) {
             console.info(`Skipping update extraction as no updates channels available`);
 
             return posts;
         }
 
-        return extractUpdatesFromFacebookPosts(posts, method, updatesChannels)
+        return extractUpdatesFromFacebookPosts(client, posts, method, updatesChannels)
     }
 
     getFacebookPosts()
-        .then((posts) => codeExtraction(posts, 'initial'))
-        .then((posts) => updateExtraction(posts, 'initial'))
+        .then((posts) => codeExtraction(client, posts, 'initial'))
+        .then((posts) => updateExtraction(client, posts, 'initial'))
         .then(() => client.setInterval(
                 async () => {
                     await getFacebookPosts()
-                        .then((posts) => codeExtraction(posts, 'poll'))
-                        .then((posts) => updateExtraction(posts, 'poll'))
+                        .then((posts) => codeExtraction(client, posts, 'poll'))
+                        .then((posts) => updateExtraction(client, posts, 'poll'))
                         .catch(console.error);
                 },
                 config.pollInterval

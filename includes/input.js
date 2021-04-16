@@ -112,7 +112,9 @@ const extractUserFromInput = (args, client) => {
 const extractTimeFromInput = (args) => {
     let input = args.slice((args.indexOf('@') + 1), args.length).join(' ');
 
-    if (input.includes('-')) {
+    if (input.includes('/')) {
+        return moment(input, 'D/M/YYYY hh:mm');
+    } else if (input.includes('-')) {
         return moment(input, 'DD-MM-YYYY hh:mm');
     } else if (input.includes(':')) {
         return moment(input, 'hh:mm');

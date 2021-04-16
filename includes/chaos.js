@@ -1,7 +1,7 @@
 const moment = require('moment-timezone');
 
 const ms = require('string-to-ms');
-const { timeDuration } = require("./timeDuration");
+const { timeDuration } = require('./timeDuration');
 
 const initialChaosStartTime = moment('10-10-2020 13:00:00', 'DD-MM-YYYY hh:mm:ss').tz('Europe/London');
 const chaosInterval = ms('14d 2h');
