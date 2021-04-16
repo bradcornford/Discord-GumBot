@@ -1,4 +1,4 @@
-const dadJokes = require('@mikemcbride/dad-jokes');
+const DadJokes = require('dadjokes-wrapper');
 
 module.exports = {
     name: 'dadjoke',
@@ -6,6 +6,8 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
-        return message.channel.send(`👨 **Dad joke:** ${dadJokes.random()}`);
+        return new DadJokes().randomJoke()
+            .then(joke => message.channel.send(`👨 **Dad joke:** ${joke}`))
+            .catch(console.error);
     },
 };
