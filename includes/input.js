@@ -76,6 +76,8 @@ const extractMessageFromInput = (args) => {
 
     if (args.indexOf('~') !== -1) {
         end = args.indexOf('~');
+    } else if (args.indexOf('{') !== -1) {
+        end = args.indexOf('{');
     } else if (args.indexOf('@') !== -1) {
         end = args.indexOf('@');
     } else {
@@ -88,7 +90,9 @@ const extractMessageFromInput = (args) => {
 const extractUserFromInput = (args, client) => {
     let end;
 
-    if (args.indexOf('@') !== -1) {
+    if (args.indexOf('{') !== -1) {
+        end = args.indexOf('{');
+    } else if (args.indexOf('@') !== -1) {
         end = args.indexOf('@');
     } else {
         end = args.length;
@@ -125,9 +129,20 @@ const extractTimeFromInput = (args) => {
     return moment();
 }
 
+const extractOptionsFromInput = (args) => {
+    let output = [];
+
+    if (args.indexOf('{') !== -1 && args.indexOf('}') !== -1){
+        output = args.slice((args.indexOf('{') + 1), args.indexOf('}')).join('').replace(' ', '').split('|');
+    }
+
+    return output;
+}
+
 exports.validateMessageFromInput = validateMessageFromInput;
 exports.validateUserFromInput = validateUserFromInput;
 exports.validateTimeFromInput = validateTimeFromInput;
 exports.extractMessageFromInput = extractMessageFromInput;
 exports.extractUserFromInput = extractUserFromInput;
 exports.extractTimeFromInput = extractTimeFromInput;
+exports.extractOptionsFromInput = extractOptionsFromInput;

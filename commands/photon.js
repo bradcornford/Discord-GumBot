@@ -13,7 +13,7 @@ module.exports = {
             return message;
         }
 
-        return invite.run(client, message, ['Photon', 'Party', ...args])
+        return invite.run(client, message, ['Photon', 'Party', '{', '✅', '|', '❓', '}', ...args])
             .then(() => {
                 message.channel.send('^Use the tick on the form __only__ to confirm if you are using a *Photon Computer*.');
             })

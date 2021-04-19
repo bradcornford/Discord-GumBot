@@ -6,7 +6,9 @@ const ms = require('string-to-ms');
 
 const config = require('../includes/config');
 
-const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractTimeFromInput } = require('../includes/input');
+const { getUsernameForGuild } = require("../includes/discord");
+
+const { validateMessageFromInput, validateTimeFromInput, extractMessageFromInput, extractOptionsFromInput, extractTimeFromInput } = require('../includes/input');
 
 const { timeDuration } = require('../includes/timeDuration');
 
@@ -15,8 +17,9 @@ module.exports = {
     description: 'Create an invite to an event',
     parameters: [
         'Event Name',
+        '{', '✅', '|', '❓', '|', '❌', '|' , '...', '}',
         '@',
-        '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m', ']'
+        '[', 'dd-mm-yyyy hh:mm', '|', 'hh:mm' , '|' , '1d 1h 1m', ']',
     ],
     hidden: false,
     run: async (client, message, args) => {
@@ -29,34 +32,39 @@ module.exports = {
         let inviteTime = extractTimeFromInput(args);
         let inviteMessage;
         let inviteName = extractMessageFromInput(args);
+        let inviteOptions = extractOptionsFromInput(args);
+
+        if (inviteOptions.length === 0) {
+            inviteOptions = ['✅', '❓', '❌'];
+        }
 
         const reactedUsers = new Collection();
-        const accepted = new Collection();
-        const declined = new Collection();
-        const tentative = new Collection();
+        const options = {};
+
+        inviteOptions.forEach((pollOption) => {
+            options[pollOption] = new Collection();
+        });
+
+        let panels = () => {
+            let fields = [];
+
+            inviteOptions.forEach((inviteOption, index) => {
+                fields.push({
+                    name: inviteOption,
+                    value: (options[inviteOption].size === 0 ? '-' : options[inviteOption].map((username) => { return username; }).join(`\n`)),
+                    inline: true,
+                });
+            });
+
+            return fields;
+        };
 
         let embed = () => {
             return new MessageEmbed()
                 .setColor(config.colors.primary)
                 .setTitle(inviteName)
                 .setDescription(inviteTime)
-                .addFields(
-                    {
-                        name: 'Accepted',
-                        value: (accepted.size === 0 ? '-' : accepted.map((username) => { return username; }).join(`\n`)),
-                        inline: true,
-                    },
-                    {
-                        name: 'Declined',
-                        value: (declined.size === 0 ? '-' : declined.map((username) => { return username; }).join(`\n`)),
-                        inline: true,
-                    },
-                    {
-                        name: 'Tentative',
-                        value: (tentative.size === 0 ? '-' : tentative.map((username) => { return username; }).join(`\n`)),
-                        inline: true,
-                    },
-                )
+                .addFields(...panels())
                 .setAuthor(`Created by ${message.author.username}`)
                 .setFooter(inviteTime.diff(moment()) <= 0 ? 'Occurred' : `Occurs in ${timeDuration(inviteTime.diff(moment()))}`)
                 .setTimestamp();
@@ -70,12 +78,16 @@ module.exports = {
                 inviteMessage = message;
                 console.log(`User ${initialMessage.author.username} created 'invite': ${inviteName} @ ${inviteTime}`);
 
-                message.react('✅')
-                    .then(() => message.react('❌'))
-                    .then(() => message.react('❓'))
+                let promises = [];
+
+                inviteOptions.forEach((inviteOption) => {
+                    promises.push(message.react(inviteOption));
+                });
+
+                Promise.all(promises)
                     .then(() => {
                         const filter = (reaction, user) => {
-                            if (!['✅', '❌', '❓'].includes(reaction.emoji.name)) {
+                            if (!inviteOptions.includes(reaction.emoji.name)) {
                                 reaction.users.reaction.users.remove(user.id)
                                     .then(() => console.log(`Deleted unrecognised 'invite' reaction from ${user.username}`))
                                     .catch(console.error);
@@ -99,19 +111,10 @@ module.exports = {
                         const collector = message.createReactionCollector(filter, { time: inviteTime.diff(now) + ms('1m'), dispose: true });
 
                         collector.on('collect', (reaction, user) => {
-                            reactedUsers.set(user.id, user.username);
+                            let nickname = getUsernameForGuild(user, inviteMessage.guild);
 
-                            switch(reaction.emoji.name) {
-                                case '✅':
-                                    accepted.set(user.id, user.username);
-                                    break;
-                                case '❌':
-                                    declined.set(user.id, user.username);
-                                    break;
-                                case '❓':
-                                    tentative.set(user.id, user.username);
-                                    break;
-                            }
+                            reactedUsers.set(user.id, nickname);
+                            options[reaction.emoji.name].set(user.id, nickname);
 
                             inviteMessage.edit('', {embed: embed()})
                                 .catch(console.error);
@@ -119,18 +122,7 @@ module.exports = {
 
                         collector.on('remove', (reaction, user) => {
                             reactedUsers.delete(user.id);
-
-                            switch(reaction.emoji.name) {
-                                case '✅':
-                                    accepted.delete(user.id);
-                                    break;
-                                case '❌':
-                                    declined.delete(user.id);
-                                    break;
-                                case '❓':
-                                    tentative.delete(user.id);
-                                    break;
-                            }
+                            options[reaction.emoji.name].delete(user.id);
 
                             inviteMessage.edit('', {embed: embed()})
                                 .catch(console.error);
