@@ -50,7 +50,7 @@ module.exports = {
 
             inviteOptions.forEach((inviteOption, index) => {
                 fields.push({
-                    name: inviteOption,
+                    name: '[' + inviteOption + ']',
                     value: (options[inviteOption].size === 0 ? '-' : options[inviteOption].map((username) => { return username; }).join(`\n`)),
                     inline: true,
                 });
