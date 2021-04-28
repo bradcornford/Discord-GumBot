@@ -77,7 +77,7 @@ const extractCodesFromFacebookPosts = async (client, posts, type, channels) => {
 };
 
 const matchUpdateInFacebookPost = (post) => {
-    let pattern = /(&lt;([Vv][0-9]+\.[0-9]+\.[0-9]+)&gt; )?Update Announcement/;
+    let pattern = /((&lt;)?<?([Vv]?[0-9]+\.[0-9]+\.[0-9]+)(&gt;)?>? )?Update Announcement/;
 
     if (post.message.includes('Update Announcement')) {
         let matches = post.message.match(pattern);
