@@ -103,12 +103,22 @@ const createUpdateReminder = (client, channels, message) => {
             matches !== null &&
             matches[1] !== 'undefined'
         ) {
+            let datetimeFormat = '';
+
+            if (parseInt(matches[2]) < 12 && parseInt(matches[3]) < 12) {
+                datetimeFormat += 'M/D';
+            } else {
+                datetimeFormat += (parseInt(matches[2]) > 12 ? 'D' : 'M') + '/' + (parseInt(matches[3]) > 12 ? 'D' : 'M');
+            }
+
+            datetimeFormat += '/YYYY hh:mm';
+
             let now = moment();
-            let maintenanceTime = moment.tz(matches[1], 'M/D/YYYY hh:mm', 'Asia/Shanghai')
+            let maintenanceTime = moment.tz(matches[1], datetimeFormat, 'Asia/Shanghai')
                 .subtract(15, 'minutes')
                 .tz('Europe/London');
             let maintenanceMessage = 'Scheduled server maintenance in 15m';
-            let maintenanceUser = '@everyone';
+            let maintenanceUser = 'everyone';
 
             console.log(`Created 'maintenance reminder': ${maintenanceMessage} ~ ${maintenanceUser} @ ${maintenanceTime}`);
 
