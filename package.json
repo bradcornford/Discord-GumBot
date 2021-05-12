@@ -1,6 +1,6 @@
 {
   "name": "discord-gumbot",
-  "version": "1.38.3",
+  "version": "1.38.4",
   "description": "A Discord gumballs and dungeons bot",
   "main": "index.js",
   "scripts": {

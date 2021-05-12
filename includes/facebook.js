@@ -96,29 +96,50 @@ const matchUpdateInFacebookPost = (post) => {
 
 const createUpdateReminder = (client, channels, message) => {
     if (message.includes('Game Time')) {
-        let pattern = /: ?([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4} [0-9]{2}:[0-9]{2}) ?- ?[0-9]{2}:[0-9]{2}/;
+        let now = moment();
+        let maintenanceMessage = 'Scheduled server maintenance in 15m';
+        let maintenanceUser = 'everyone';
+        let datetime = null;
+        let datetimeFormat = null;
+
+        let pattern = /: ?(([0-9]{1,4})\/([0-9]{1,2})\/([0-9]{1,4}) [0-9]{2}:[0-9]{2}) ?- ?[0-9]{2}:[0-9]{2}/;
         let matches = message.match(pattern);
 
         if (
             matches !== null &&
-            matches[1] !== 'undefined'
+            matches[1] !== 'undefined' &&
+            matches[2] !== 'undefined' &&
+            matches[3] !== 'undefined' &&
+            matches[4] !== 'undefined'
         ) {
-            let datetimeFormat = '';
+            datetime = matches[1];
+            datetimeFormat = '';
 
-            if (parseInt(matches[2]) < 12 && parseInt(matches[3]) < 12) {
-                datetimeFormat += 'M/D';
+            if (matches[2].length === 4) {
+                datetimeFormat += 'Y/';
+
+                if (parseInt(matches[3]) > 12) {
+                    datetimeFormat += 'D/M';
+                } else {
+                    datetimeFormat += 'M/D';
+                }
             } else {
-                datetimeFormat += (parseInt(matches[2]) > 12 ? 'D' : 'M') + '/' + (parseInt(matches[3]) > 12 ? 'D' : 'M');
+                if (parseInt(matches[2]) > 12) {
+                    datetimeFormat += 'D/M';
+                } else {
+                    datetimeFormat += 'M/D';
+                }
+
+                datetimeFormat += '/YYYY';
             }
 
-            datetimeFormat += '/YYYY hh:mm';
+            datetimeFormat += ' h:m';
+        }
 
-            let now = moment();
-            let maintenanceTime = moment.tz(matches[1], datetimeFormat, 'Asia/Shanghai')
+        if (datetime !== null && datetimeFormat !== null) {
+            let maintenanceTime = moment.tz(datetime, 'Y/M/D h:m', 'Asia/Shanghai')
                 .subtract(15, 'minutes')
                 .tz('Europe/London');
-            let maintenanceMessage = 'Scheduled server maintenance in 15m';
-            let maintenanceUser = 'everyone';
 
             console.log(`Created 'maintenance reminder': ${maintenanceMessage} ~ ${maintenanceUser} @ ${maintenanceTime}`);
 
@@ -147,13 +168,13 @@ const extractUpdatesFromFacebookPosts = async (client, posts, type, channels) =>
                 config.updates.unshift({ 'version': update, 'date': post.created_at });
                 console.log(`Poll update: ${update}`);
 
-                let message = htmlToText.fromString(post.message).substring(1, 1024).split('See more')[0];
+                let message = htmlToText.fromString(post.message).substring(1, 2048).split('See more')[0];
 
                 const embed = new MessageEmbed()
                     .setColor(0x17A2B8)
                     .setTitle('Update Announcement')
-                    .setDescription(`Version ${update}`)
-                    .addField('Description', message)
+                    .setDescription(message)
+                    .setFooter(`Version ${update}`)
                     .setURL(`https://www.facebook.com${post.message.match(/href="(.+)" /)[1]}`);
 
                 channels.forEach((channel) => {
