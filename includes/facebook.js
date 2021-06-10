@@ -96,9 +96,6 @@ const matchUpdateInFacebookPost = (post) => {
 
 const createUpdateReminder = (client, channels, message) => {
     if (message.includes('Game Time')) {
-        let now = moment();
-        let maintenanceMessage = 'Scheduled server maintenance in 15m';
-        let maintenanceUser = 'everyone';
         let datetime = null;
         let datetimeFormat = null;
 
@@ -137,6 +134,9 @@ const createUpdateReminder = (client, channels, message) => {
         }
 
         if (datetime !== null && datetimeFormat !== null) {
+            let now = moment();
+            let maintenanceMessage = 'Scheduled server maintenance in 15m';
+            let maintenanceUser = '@everyone';
             let maintenanceTime = moment.tz(datetime, 'Y/M/D h:m', 'Asia/Shanghai')
                 .subtract(15, 'minutes')
                 .tz('Europe/London');
