@@ -26,10 +26,10 @@ module.exports = {
         let duration = 0;
 
         accelerators.forEach((accelerator) => {
-            let values = accelerator[0].split(':');
-            duration += (values[0] * ms(values[1]));
+            let [amount, time] = accelerator[0].split(':');
+            duration += (amount * ms(time));
         });
 
-        return message.channel.send(`📦 **Total accelerators:** ${timeDuration(duration, true, false)}`);
+        return message.channel.send(`📦 **Total accelerators:**\n${timeDuration(duration, true, false)}`);
     },
 };
