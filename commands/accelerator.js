@@ -7,7 +7,7 @@ const { timeDuration } = require('../includes/timeDuration');
 module.exports = {
     name: 'accelerator',
     description: 'Calculate the time of accelerators',
-    parameters: ['(x:7d)', '(x:3d)', '(x:24h)', '(x:8h)', '(x:3h)', '(x:60m)', '(x:30m)', '(x:15m)', '(x:10m)', '(x:5m)', '(x:1m)'],
+    parameters: ['x:7d', 'x:3d', 'x:24h', 'x:8h', 'x:3h', 'x:60m', 'x:30m', 'x:15m', 'x:10m', 'x:5m', 'x:1m'],
     hidden: false,
     run: async (client, message, args) => {
         if (!validateMessageFromInput(args, message)) {
