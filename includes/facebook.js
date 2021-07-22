@@ -1,4 +1,4 @@
-const request = require('request-promise-native');
+const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const moment = require('moment-timezone');
 
@@ -9,19 +9,20 @@ const htmlToText = require('html-to-text');
 const config = require('../includes/config');
 
 const getFacebookPosts = async () => {
-    return await request.get({
-        url: 'https://www.facebook.com/gumballs.dungeons/posts/',
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0'
-        }
-    })
-        .then( postsHtml => {
-            const $ = cheerio.load(postsHtml);
+    return await fetch(
+        'https://www.facebook.com/gumballs.dungeons/posts/?_fb_noscript=1', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0'
+            }
+        })
+        .then(async response => {
+            const html = await response.text();
+            const $ = cheerio.load(html);
 
             console.log('Completed Facebook request');
 
             const timeLinePostElements = $('.userContent').map((i,el) => $(el)).get();
-            const result = timeLinePostElements.map(post => {
+            const posts = timeLinePostElements.map(post => {
                 return {
                     message: post.html(),
                     created_at: post.parents('.userContentWrapper').find('.timestampContent').html()
@@ -30,8 +31,9 @@ const getFacebookPosts = async () => {
 
             console.log('Completed parsing Facebook request to posts');
 
-            return result;
+            return posts;
         })
+        .catch(console.error);
 };
 
 const matchCodeInFacebookPost = (post) => {
