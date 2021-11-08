@@ -64,7 +64,6 @@ module.exports = {
                             .then(message => countdownMessage = message)
                             .catch(error => {
                                 console.error(error);
-                                client.clearInterval(timer);
                             });
 
                         if (countdownTime.diff(moment()) <= 0) {
