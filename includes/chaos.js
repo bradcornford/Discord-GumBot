@@ -29,6 +29,7 @@ const getDurationRelativeToReset = (time) => {
 }
 
 const getNextChaosGiantCreatureRespawnDatetime = () => {
+    let now = moment().tz('Europe/London');
     let currentlyInChaos = currentlyInChaosPeriod();
     let nextChaosTime = getNextChaosDatetime();
     let nextChaosGiantCreatureTime;
