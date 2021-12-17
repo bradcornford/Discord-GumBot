@@ -1,4 +1,7 @@
-const { getNextTimefieldDatetime, getNextTimefieldTwistedSpaceAttackDatetimes } = require('../includes/timefield');
+const ms = require('string-to-ms');
+
+const { getCurrentTimefieldDatetime, getCurrentTimefieldTwistedSpaceAttackDatetimes, getNextTimefieldDatetime, getNextTimefieldTwistedSpaceAttackDatetimes } = require('../includes/timefield');
+const moment = require("moment-timezone");
 
 module.exports = {
     name: 'twisteds',
@@ -6,26 +9,46 @@ module.exports = {
     parameters: [],
     hidden: false,
     run: async (client, message, args) => {
+        let now = moment().tz('Europe/London');
         let countdown = require(`../commands/countdown`);
         let remind = require(`../commands/remind`);
-        let nextTimefiledTime = getNextTimefieldDatetime();
-        let nextTimefieldTwistedSpaceAttackTimes = getNextTimefieldTwistedSpaceAttackDatetimes();
+        let currentTimefieldTime = getCurrentTimefieldDatetime();
+        let timefield;
+        let timefieldTime;
+        let timefieldTwistedSpaceAttackTimes;
 
-        return countdown.run(
-            client,
-            message,
-            [
-                'Timefield',
-                'resets',
-                '~',
-                'everyone',
-                '@',
-                ...nextTimefiledTime.format('DD-MM-YYYY HH:mm').split(' ')
-            ]
-        )
+        if ((now - currentTimefieldTime) < ms('3d')) {
+            timefield = 'current';
+            timefieldTime = currentTimefieldTime;
+            timefieldTwistedSpaceAttackTimes = getCurrentTimefieldTwistedSpaceAttackDatetimes();
+        } else {
+            timefield = 'future';
+            timefieldTime = getNextTimefieldDatetime();
+            timefieldTwistedSpaceAttackTimes = getNextTimefieldTwistedSpaceAttackDatetimes();
+        }
+
+        return new Promise(async (resolve) => {
+            if (timefield !== 'current') {
+                await countdown.run(
+                    client,
+                    message,
+                    [
+                        'Timefield',
+                        'resets',
+                        '~',
+                        'everyone',
+                        '@',
+                        ...timefieldTime.format('DD-MM-YYYY HH:mm').split(' ')
+                    ]
+                )
+                    .catch(console.error);
+            }
+
+            resolve();
+        })
             .then(() => {
-                nextTimefieldTwistedSpaceAttackTimes.forEach((nextTimefieldTwistedSpaceAttack, index) => {
-                    let [page, nextTimefieldTwistedSpaceAttackTime] = nextTimefieldTwistedSpaceAttack
+                timefieldTwistedSpaceAttackTimes.forEach((timefieldTwistedSpaceAttack, index) => {
+                    let [page, timefieldTwistedSpaceAttackTime] = timefieldTwistedSpaceAttack
 
                     if (page <= 1) {
                         pages = ['All pages'];
@@ -47,7 +70,7 @@ module.exports = {
                             '~',
                             'everyone',
                             '@',
-                            ...nextTimefieldTwistedSpaceAttackTime.clone().format('DD-MM-YYYY HH:mm').split(' ')
+                            ...timefieldTwistedSpaceAttackTime.clone().format('DD-MM-YYYY HH:mm').split(' ')
                         ]
                     );
                 });

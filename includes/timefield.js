@@ -31,21 +31,32 @@ const getCurrentTimefieldDatetime = () => {
 
 const getCurrentTimefieldTwistedSpaceAttackDatetime = () => {
     let now = moment().tz('Europe/London');
-    let currentChaosTime = getCurrentTimefieldDatetime();
+    let currentTimefieldTime = getCurrentTimefieldDatetime();
 
-    if (now.diff(currentChaosTime) < ms('4d')) {
-        timefiledTwistedSpaceAttackTime = [4, currentChaosTime.add(ms('4d'))];
-    } else if (now.diff(currentChaosTime) < ms('6d')) {
-        timefiledTwistedSpaceAttackTime = [3, currentChaosTime.add(ms('6d'))];
-    } else if (now.diff(currentChaosTime) < ms('8d')) {
-        timefiledTwistedSpaceAttackTime = [2, currentChaosTime.add(ms('8d'))];
-    } else if (now.diff(currentChaosTime) < ms('1.d')) {
-        timefiledTwistedSpaceAttackTime = [1, currentChaosTime.add(ms('10d'))];
+    if (now.diff(currentTimefieldTime) < ms('4d')) {
+        timefiledTwistedSpaceAttackTime = [4, currentTimefieldTime.add(ms('4d'))];
+    } else if (now.diff(currentTimefieldTime) < ms('6d')) {
+        timefiledTwistedSpaceAttackTime = [3, currentTimefieldTime.add(ms('6d'))];
+    } else if (now.diff(currentTimefieldTime) < ms('8d')) {
+        timefiledTwistedSpaceAttackTime = [2, currentTimefieldTime.add(ms('8d'))];
+    } else if (now.diff(currentTimefieldTime) < ms('1.d')) {
+        timefiledTwistedSpaceAttackTime = [1, currentTimefieldTime.add(ms('10d'))];
     } else {
         timefiledTwistedSpaceAttackTime = [0, 'Now'];
     }
 
     return timefiledTwistedSpaceAttackTime;
+}
+
+const getCurrentTimefieldTwistedSpaceAttackDatetimes = () => {
+    let currentTimefieldTime = getCurrentTimefieldDatetime();
+
+    return [
+        [4, currentTimefieldTime.clone().add(ms('4d'))],
+        [3, currentTimefieldTime.clone().add(ms('6d'))],
+        [2, currentTimefieldTime.clone().add(ms('8d'))],
+        [1, currentTimefieldTime.clone().add(ms('10d'))],
+    ];
 }
 
 const getNextTimefieldTwistedSpaceAttackDatetimes = () => {
@@ -63,4 +74,5 @@ exports.getNextTimefieldDatetime = getNextTimefieldDatetime;
 exports.getDurationToReset = getDurationToReset;
 exports.getCurrentTimefieldDatetime = getCurrentTimefieldDatetime;
 exports.getCurrentTimefieldTwistedSpaceAttackDatetime = getCurrentTimefieldTwistedSpaceAttackDatetime;
+exports.getCurrentTimefieldTwistedSpaceAttackDatetimes = getCurrentTimefieldTwistedSpaceAttackDatetimes;
 exports.getNextTimefieldTwistedSpaceAttackDatetimes = getNextTimefieldTwistedSpaceAttackDatetimes;

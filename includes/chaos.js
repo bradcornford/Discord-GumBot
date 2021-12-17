@@ -75,6 +75,17 @@ const getCurrentChaosDatetime = () => {
     );
 }
 
+const getCurrentChaosGiantCreatureRespawnDatetimes = () => {
+    let currentChaosTime = getCurrentChaosDatetime();
+
+    return [
+        currentChaosTime,
+        currentChaosTime.clone().add(ms('3h')),
+        currentChaosTime.clone().add(ms('6h')),
+        currentChaosTime.clone().add(ms('9h'))
+    ];
+}
+
 const currentlyInChaosPeriod = () => {
     let now = moment().tz('Europe/London');
 
@@ -85,5 +96,6 @@ exports.getNextChaosDatetime = getNextChaosDatetime;
 exports.getDurationRelativeToReset = getDurationRelativeToReset;
 exports.currentlyInChaosPeriod = currentlyInChaosPeriod;
 exports.getCurrentChaosDatetime = getCurrentChaosDatetime;
+exports.getCurrentChaosGiantCreatureRespawnDatetimes = getCurrentChaosGiantCreatureRespawnDatetimes;
 exports.getNextChaosGiantCreatureRespawnDatetime = getNextChaosGiantCreatureRespawnDatetime;
 exports.getNextChaosGiantCreatureRespawnDatetimes = getNextChaosGiantCreatureRespawnDatetimes;
