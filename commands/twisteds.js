@@ -17,7 +17,7 @@ module.exports = {
         let timefieldTime;
         let timefieldTwistedSpaceAttackTimes;
 
-        if ((now - currentTimefieldTime) < ms('3d')) {
+        if ((now - currentTimefieldTime) < ms('9d')) {
             timefield = 'current';
             timefieldTime = currentTimefieldTime;
             timefieldTwistedSpaceAttackTimes = getCurrentTimefieldTwistedSpaceAttackDatetimes();
@@ -50,29 +50,35 @@ module.exports = {
                 timefieldTwistedSpaceAttackTimes.forEach((timefieldTwistedSpaceAttack, index) => {
                     let [page, timefieldTwistedSpaceAttackTime] = timefieldTwistedSpaceAttack
 
-                    if (page <= 1) {
-                        pages = ['All pages'];
-                    } else if(page === 5) {
-                        pages = ['Page', page];
-                    } else {
-                        pages = ['Pages', `${page}-5`];
-                    }
+                    console.log(now > timefieldTwistedSpaceAttackTime);
+                    console.log(timefieldTwistedSpaceAttackTime);
+                    console.log(page);
 
-                    remind.run(
-                        client,
-                        message,
-                        [
-                            ...pages,
-                            'can',
-                            'attack',
-                            'twisted',
-                            'space',
-                            '~',
-                            'everyone',
-                            '@',
-                            ...timefieldTwistedSpaceAttackTime.clone().format('DD-MM-YYYY HH:mm').split(' ')
-                        ]
-                    );
+                    if (now < timefieldTwistedSpaceAttackTime) {
+                        if (page <= 1) {
+                            pages = ['All pages'];
+                        } else if (page === 5) {
+                            pages = ['Page', page];
+                        } else {
+                            pages = ['Pages', `${page}-5`];
+                        }
+
+                        remind.run(
+                            client,
+                            message,
+                            [
+                                ...pages,
+                                'can',
+                                'attack',
+                                'twisted',
+                                'space',
+                                '~',
+                                'everyone',
+                                '@',
+                                ...timefieldTwistedSpaceAttackTime.clone().format('DD-MM-YYYY HH:mm').split(' ')
+                            ]
+                        );
+                    }
                 });
             });
     },

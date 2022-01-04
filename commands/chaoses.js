@@ -17,7 +17,7 @@ module.exports = {
         let chaosTime;
         let chaosGiantCreatureRespawnDatetimes;
 
-        if ((now - currentChaosTime) < ms('2h')) {
+        if ((now - currentChaosTime) < ms('8h')) {
             chaos = 'current';
             chaosTime = currentChaosTime;
             chaosGiantCreatureRespawnDatetimes = getCurrentChaosGiantCreatureRespawnDatetimes();
@@ -48,22 +48,24 @@ module.exports = {
         })
             .then(() => {
                 chaosGiantCreatureRespawnDatetimes.forEach((respawnTime, index) => {
-                    remind.run(
-                        client,
-                        message,
-                        [
-                            'Chaos',
-                            'Giant',
-                            'Creature',
-                            (index === 0 ? 'spawns' : 'respawns'),
-                            'in',
-                            '5m',
-                            '~',
-                            'everyone',
-                            '@',
-                            ...respawnTime.clone().subtract(5, 'minutes').format('DD-MM-YYYY HH:mm').split(' ')
-                        ]
-                    );
+                    if (now < respawnTime) {
+                        remind.run(
+                            client,
+                            message,
+                            [
+                                'Chaos',
+                                'Giant',
+                                'Creature',
+                                (index === 0 ? 'spawns' : 'respawns'),
+                                'in',
+                                '5m',
+                                '~',
+                                'everyone',
+                                '@',
+                                ...respawnTime.clone().subtract(5, 'minutes').format('DD-MM-YYYY HH:mm').split(' ')
+                            ]
+                        );
+                    }
                 });
             });
     },
